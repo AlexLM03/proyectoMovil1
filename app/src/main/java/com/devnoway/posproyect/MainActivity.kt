@@ -4,46 +4,23 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.devnoway.posproyect.ui.theme.ProyectoMovil1Theme
+import com.devnoway.posproyect.navigation.AcambapanApp
+import com.devnoway.posproyect.ui.theme.AcambapanTheme
 
+/**
+ * Acambapan: ventas en linea de una panaderia.
+ *
+ * Esta es la maqueta de pantallas: todas las pantallas existen y se navega
+ * entre ellas, pero todavia no hay base de datos ni API.
+ */
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            ProyectoMovil1Theme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-
-
+            AcambapanTheme {
+                AcambapanApp()
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ProyectoMovil1Theme {
-        Greeting("Android")
     }
 }
