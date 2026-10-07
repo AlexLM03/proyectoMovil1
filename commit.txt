@@ -1,8 +1,4 @@
-Maqueta completa de pantallas de Acambapan con navegación
-
-Agrego la maqueta de pantallas que se pidió para la app Acambapan (ventas en
-línea de una panadería ficticia). Todas las pantallas ya existen, los botones
-y la barra inferior sí cambian de pantalla, y todavía no hay base de datos ni
+Agrego la maqueta de pantallas que se pidió para la app Acambapan. Todas las pantallas ya existen, los botones y la barra inferior sí cambian de pantalla, y todavía no hay base de datos ni
 funciones avanzadas: los datos que se ven son de ejemplo.
 
 Pantallas agregadas (11)
@@ -59,6 +55,4 @@ Pendiente para las siguientes entregas
   editar insumo, llamar al repartidor, métodos de pago) muestran un aviso de
   que siguen pendientes.
 - Pasar los textos a strings.xml y usar iconos propios en lugar de emojis.
-
-Probado en el emulador (Pixel 10 Pro XL, Android 17): la app compila, se
-instala y se navega entre las pantallas.
+la app compila, se instala y se navega entre las pantallas.
