@@ -1,0 +1,64 @@
+Maqueta completa de pantallas de Acambapan con navegación
+
+Agrego la maqueta de pantallas que se pidió para la app Acambapan (ventas en
+línea de una panadería ficticia). Todas las pantallas ya existen, los botones
+y la barra inferior sí cambian de pantalla, y todavía no hay base de datos ni
+funciones avanzadas: los datos que se ven son de ejemplo.
+
+Pantallas agregadas (11)
+- Inicio de sesión, con las opciones de iniciar sesión, crear cuenta y entrar
+  como invitado, más un acceso para el administrador.
+- Registro de cliente nuevo.
+- Inicio / catálogo, con buscador, chips de categoría y tarjetas de producto.
+- Detalle del producto, con selector de cantidad y total.
+- Carrito y pago, con tipo de entrega (domicilio o recoger), dirección y
+  resumen de subtotal, envío y total.
+- Seguimiento del pedido, con la línea de tiempo de los 4 estados y los datos
+  del repartidor.
+- Perfil y configuración (mis pedidos, direcciones, métodos de pago,
+  notificaciones y modo administrador).
+- Panel principal del administrador.
+- Dash administrativo, con indicadores del día, meta de ventas y pedidos
+  recientes.
+- Gestión de pedidos, con filtros por estado.
+- Inventario, con existencias, mínimos y aviso de insumos bajos.
+
+Navegación
+- Se usa Navigation Compose. Las rutas quedaron en un solo lugar
+  (navigation/Rutas.kt) y el grafo en navigation/NavegacionAcambapan.kt.
+- El detalle recibe el id del producto por la ruta
+  (detalle_producto/{productoId}), para no repetir una pantalla por producto.
+- Quedaron dos flujos: el del cliente (catálogo, carrito, seguimiento, perfil)
+  y el del administrador (panel, dash, pedidos, inventario), cada uno con su
+  barra de navegación inferior.
+
+Interfaz
+- Tema de marca: fondo blanco sobre el crema #F9F3E9, con acentos café y
+  canela. El modo oscuro queda pendiente para que la marca se vea igual en
+  cualquier teléfono.
+- El logotipo del proyecto se agregó como recurso (drawable-nodpi) y se usa en
+  el login, el registro y el perfil.
+- El nombre de la app cambió a "Acambapan".
+- Dejé componentes reutilizables en ui/components (botones, campos de texto,
+  tarjetas de producto, barras de navegación y los marcos de pantalla), para no
+  repetir código en cada pantalla.
+
+Datos de ejemplo
+- Todavía no hay base de datos. Los 12 productos, los pedidos, el inventario y
+  los datos del usuario están en memoria en data/DatosMock.kt; cuando se
+  conecte la API de panaderia.devnoway.com esa información viene del servidor.
+
+Configuración
+- Se agregó la dependencia androidx.navigation:navigation-compose 2.10.2 en
+  gradle/libs.versions.toml y en app/build.gradle.kts.
+
+Pendiente para las siguientes entregas
+- Conectar la base de datos (Room) y la API panaderia.devnoway.com.
+- Login real, pago real y seguimiento actualizado en tiempo real.
+- Los botones que todavía no llevan a ninguna pantalla (agregar insumo,
+  editar insumo, llamar al repartidor, métodos de pago) muestran un aviso de
+  que siguen pendientes.
+- Pasar los textos a strings.xml y usar iconos propios en lugar de emojis.
+
+Probado en el emulador (Pixel 10 Pro XL, Android 17): la app compila, se
+instala y se navega entre las pantallas.
