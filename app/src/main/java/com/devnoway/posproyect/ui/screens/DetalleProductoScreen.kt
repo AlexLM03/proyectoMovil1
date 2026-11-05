@@ -23,11 +23,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.devnoway.posproyect.data.DatosMock
-import com.devnoway.posproyect.data.enPesos
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.devnoway.posproyect.data.modelo.enPesos
+import com.devnoway.posproyect.di.ContenedorApp
 import com.devnoway.posproyect.navigation.Rutas
 import com.devnoway.posproyect.ui.components.BotonPrincipal
 import com.devnoway.posproyect.ui.components.BotonSecundario
@@ -35,26 +36,30 @@ import com.devnoway.posproyect.ui.components.EtiquetaEstado
 import com.devnoway.posproyect.ui.components.FilaDato
 import com.devnoway.posproyect.ui.components.MarcoCliente
 import com.devnoway.posproyect.ui.components.RecuadroEmoji
-import com.devnoway.posproyect.ui.theme.AcambapanTheme
+import com.devnoway.posproyect.ui.viewmodel.DetalleProductoViewModel
 
 /**
- * Detalle del producto elegido en el catalogo.
+ * Detalle del producto elegido en el catálogo.
  *
- * Recibe el id del producto por la ruta (detalle_producto/{productoId}) y lo
- * busca en los datos de ejemplo.
+ * Recibe el id por la ruta (`detalle_producto/{productoId}`), lo lee de Room y
+ * refresca la ficha desde la API. "Agregar al carrito" guarda la línea en el
+ * carrito compartido y abre el carrito.
  */
 @Composable
 fun DetalleProductoScreen(
+    contenedor: ContenedorApp,
     productoId: Int,
     onAgregarAlCarrito: () -> Unit,
     onAtras: () -> Unit,
     onNavegar: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: DetalleProductoViewModel = viewModel(
+        factory = DetalleProductoViewModel.fabrica(contenedor, productoId)
+    )
 ) {
-    val producto = DatosMock.productos.firstOrNull { it.id == productoId }
-        ?: DatosMock.productos.first()
-
+    val estado by viewModel.estado.collectAsStateWithLifecycle()
     var cantidad by remember { mutableIntStateOf(1) }
+    val producto = estado.producto
 
     MarcoCliente(
         titulo = "Detalle",
@@ -72,6 +77,23 @@ fun DetalleProductoScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            if (producto == null) {
+                Spacer(Modifier.height(48.dp))
+                Text(
+                    text = if (estado.cargando) {
+                        "Cargando producto…"
+                    } else {
+                        "Este producto no está guardado en el teléfono."
+                    },
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(Modifier.height(16.dp))
+                BotonSecundario(texto = "Volver al catálogo", onClick = onAtras)
+                return@Column
+            }
+
             RecuadroEmoji(emoji = producto.emoji, tamano = 140.dp)
 
             Text(
@@ -80,7 +102,12 @@ fun DetalleProductoScreen(
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
-            EtiquetaEstado(texto = producto.categoria, color = MaterialTheme.colorScheme.secondary)
+            if (producto.categoria.isNotBlank()) {
+                EtiquetaEstado(
+                    texto = producto.categoria,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+            }
 
             Text(
                 text = producto.precio.enPesos(),
@@ -135,21 +162,15 @@ fun DetalleProductoScreen(
             }
 
             Spacer(Modifier.height(4.dp))
-            BotonPrincipal(texto = "Agregar al carrito", onClick = onAgregarAlCarrito)
+            BotonPrincipal(
+                texto = "Agregar al carrito",
+                onClick = {
+                    viewModel.agregarAlCarrito(cantidad)
+                    onAgregarAlCarrito()
+                },
+                habilitado = producto.disponible
+            )
             BotonSecundario(texto = "Seguir comprando", onClick = onAtras)
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DetalleProductoScreenPreview() {
-    AcambapanTheme {
-        DetalleProductoScreen(
-            productoId = 1,
-            onAgregarAlCarrito = {},
-            onAtras = {},
-            onNavegar = {}
-        )
     }
 }

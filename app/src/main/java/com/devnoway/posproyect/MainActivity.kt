@@ -8,18 +8,22 @@ import com.devnoway.posproyect.navigation.AcambapanApp
 import com.devnoway.posproyect.ui.theme.AcambapanTheme
 
 /**
- * Acambapan: ventas en linea de una panaderia.
+ * Acambapan: ventas en línea de una panadería.
  *
- * Esta es la maqueta de pantallas: todas las pantallas existen y se navega
- * entre ellas, pero todavia no hay base de datos ni API.
+ * La Activity solo toma el contenedor de dependencias de la Application y
+ * monta la interfaz. Toda la lógica (sesión, catálogo, pedidos) vive en los
+ * ViewModel y los repositorios.
  */
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val contenedor = (application as AcambapanApplication).contenedor
+
         setContent {
             AcambapanTheme {
-                AcambapanApp()
+                AcambapanApp(contenedor = contenedor)
             }
         }
     }

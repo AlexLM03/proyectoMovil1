@@ -8,6 +8,9 @@ package com.devnoway.posproyect.navigation
  */
 object Rutas {
     const val LOGIN = "login"
+
+    /** Variante del login que no entra sola con la sesión guardada (candado admin). */
+    const val LOGIN_ADMIN = "login_admin"
     const val REGISTRO = "registro"
 
     // --- Flujo del cliente ---
@@ -15,6 +18,10 @@ object Rutas {
     const val CARRITO = "carrito"
     const val SEGUIMIENTO = "seguimiento"
     const val PERFIL = "perfil"
+    const val DIRECCIONES = "direcciones"
+    const val METODOS_PAGO = "metodos_pago"
+    const val NOTIFICACIONES = "notificaciones"
+    const val AYUDA = "ayuda"
 
     // --- Flujo del administrador ---
     const val ADMIN_PANEL = "admin_panel"
