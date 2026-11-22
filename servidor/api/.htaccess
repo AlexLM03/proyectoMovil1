@@ -1,0 +1,23 @@
+# API de Acambapan: todas las rutas pasan por index.php
+# El DocumentRoot del vhost (puerto 88) apunta a esta carpeta.
+
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Apache no entrega la cabecera Authorization a PHP por defecto cuando hay
+    # reescrituras; se copia a una variable de entorno para leer el token.
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # El código y la bitácora no se sirven por HTTP.
+    RewriteRule ^(src|logs)/ - [F,L]
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [QSA,L]
+</IfModule>
+
+<FilesMatch "\.(sql|log|key|md)$">
+    Require all denied
+</FilesMatch>
