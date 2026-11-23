@@ -15,53 +15,62 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.devnoway.posproyect.data.DatosMock
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.devnoway.posproyect.di.ContenedorApp
 import com.devnoway.posproyect.navigation.Rutas
+import com.devnoway.posproyect.ui.components.BandaMensaje
 import com.devnoway.posproyect.ui.components.CampoTexto
 import com.devnoway.posproyect.ui.components.ChipCategoria
+import com.devnoway.posproyect.ui.components.IndicadorConexion
 import com.devnoway.posproyect.ui.components.MarcoCliente
 import com.devnoway.posproyect.ui.components.TarjetaProducto
 import com.devnoway.posproyect.ui.components.TituloSeccion
-import com.devnoway.posproyect.ui.theme.AcambapanTheme
+import com.devnoway.posproyect.ui.viewmodel.CatalogoViewModel
 
 /**
- * Inicio / catalogo: lista de productos de la panaderia.
- * Los chips de categoria filtran la lista (estado local) y cada tarjeta
- * abre el detalle del producto.
+ * Inicio / catálogo.
+ *
+ * Los productos salen de Room (se pueden ver sin internet); el botón ⟳ los
+ * actualiza desde la Web API cuando hay conexión. Los chips y el buscador
+ * filtran en memoria lo que ya está guardado.
  */
 @Composable
 fun CatalogoScreen(
+    contenedor: ContenedorApp,
     onAbrirProducto: (Int) -> Unit,
     onNavegar: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: CatalogoViewModel = viewModel(factory = CatalogoViewModel.fabrica(contenedor))
 ) {
-    var busqueda by remember { mutableStateOf("") }
-    var categoriaSeleccionada by remember { mutableStateOf(DatosMock.categorias.first()) }
-
-    val productos = if (categoriaSeleccionada == DatosMock.categorias.first()) {
-        DatosMock.productos
-    } else {
-        DatosMock.productos.filter { it.categoria == categoriaSeleccionada }
-    }
+    val estado by viewModel.estado.collectAsStateWithLifecycle()
 
     MarcoCliente(
         titulo = "Acambapan",
         rutaActual = Rutas.CATALOGO,
         onNavegar = onNavegar,
-        modifier = modifier
+        modifier = modifier,
+        acciones = {
+            IndicadorConexion(
+                enLinea = estado.enLinea,
+                sincronizando = estado.sincronizando,
+                modifier = Modifier.padding(end = 4.dp)
+            )
+            IconButton(onClick = viewModel::sincronizar) {
+                Text(text = "⟳", fontSize = 20.sp)
+            }
+        }
     ) {
         Column(
             modifier = Modifier
@@ -70,8 +79,8 @@ fun CatalogoScreen(
                 .padding(horizontal = 16.dp)
         ) {
             CampoTexto(
-                valor = busqueda,
-                onValorCambio = { busqueda = it },
+                valor = estado.busqueda,
+                onValorCambio = viewModel::cambiarBusqueda,
                 etiqueta = "Buscar pan, pastel o bebida"
             )
 
@@ -80,17 +89,31 @@ fun CatalogoScreen(
                 modifier = Modifier.horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                DatosMock.categorias.forEach { categoria ->
+                ChipCategoria(
+                    texto = "Todos",
+                    seleccionado = estado.categoriaId == null,
+                    onClick = { viewModel.seleccionarCategoria(null) }
+                )
+                estado.categorias.forEach { categoria ->
                     ChipCategoria(
-                        texto = categoria,
-                        seleccionado = categoria == categoriaSeleccionada,
-                        onClick = { categoriaSeleccionada = categoria }
+                        texto = categoria.nombre,
+                        seleccionado = estado.categoriaId == categoria.id,
+                        onClick = { viewModel.seleccionarCategoria(categoria.id) }
                     )
                 }
             }
 
             Spacer(Modifier.height(12.dp))
             PromocionEnvio()
+
+            estado.mensaje?.let { mensaje ->
+                Spacer(Modifier.height(10.dp))
+                BandaMensaje(
+                    mensaje = mensaje,
+                    esError = true,
+                    onCerrar = viewModel::limpiarMensaje
+                )
+            }
 
             Spacer(Modifier.height(16.dp))
             Row(
@@ -100,7 +123,7 @@ fun CatalogoScreen(
                 TituloSeccion("Nuestro catálogo")
                 Spacer(Modifier.weight(1f))
                 Text(
-                    text = "${productos.size} artículos",
+                    text = "${estado.visibles.size} artículos",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -112,11 +135,28 @@ fun CatalogoScreen(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 contentPadding = PaddingValues(bottom = 16.dp)
             ) {
-                items(productos, key = { it.id }) { producto ->
+                items(estado.visibles, key = { it.id }) { producto ->
                     TarjetaProducto(
                         producto = producto,
                         onClick = { onAbrirProducto(producto.id) }
                     )
+                }
+                if (estado.visibles.isEmpty() && !estado.cargando) {
+                    item {
+                        Text(
+                            text = if (estado.enLinea) {
+                                "No hay productos que coincidan con tu búsqueda."
+                            } else {
+                                "Todavía no hay catálogo guardado. Conéctate a internet y toca ⟳."
+                            },
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 32.dp)
+                        )
+                    }
                 }
             }
         }
@@ -144,19 +184,11 @@ private fun PromocionEnvio() {
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "En pedidos mayores a $250 dentro de Acambay",
+                    text = "En pedidos mayores a $250 dentro de Acámbaro",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun CatalogoScreenPreview() {
-    AcambapanTheme {
-        CatalogoScreen(onAbrirProducto = {}, onNavegar = {})
     }
 }
