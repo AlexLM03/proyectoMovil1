@@ -14,33 +14,32 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.devnoway.posproyect.data.DatosMock
-import com.devnoway.posproyect.data.EstadoPedido
-import com.devnoway.posproyect.data.Pedido
-import com.devnoway.posproyect.data.enPesos
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.devnoway.posproyect.data.modelo.EstadoPedido
+import com.devnoway.posproyect.data.modelo.Pedido
+import com.devnoway.posproyect.data.modelo.enPesos
+import com.devnoway.posproyect.di.ContenedorApp
 import com.devnoway.posproyect.navigation.Rutas
+import com.devnoway.posproyect.ui.components.BandaMensaje
 import com.devnoway.posproyect.ui.components.BotonTexto
 import com.devnoway.posproyect.ui.components.ChipCategoria
 import com.devnoway.posproyect.ui.components.EtiquetaEstado
+import com.devnoway.posproyect.ui.components.IndicadorConexion
 import com.devnoway.posproyect.ui.components.MarcoAdmin
-import com.devnoway.posproyect.ui.theme.AcambapanTheme
 import com.devnoway.posproyect.ui.theme.VerdeExito
-
-/** Valor de filtro para ver todos los pedidos sin importar el estado. */
-private const val FILTRO_TODOS = "Todos"
+import com.devnoway.posproyect.ui.viewmodel.PedidosAdminViewModel
 
 @Composable
 private fun colorDeEstado(estado: EstadoPedido): Color = when (estado) {
@@ -48,34 +47,51 @@ private fun colorDeEstado(estado: EstadoPedido): Color = when (estado) {
     EstadoPedido.EN_PREPARACION -> MaterialTheme.colorScheme.secondary
     EstadoPedido.EN_CAMINO -> MaterialTheme.colorScheme.tertiary
     EstadoPedido.ENTREGADO -> VerdeExito
+    EstadoPedido.CANCELADO -> MaterialTheme.colorScheme.error
+}
+
+/** Siguiente estado del flujo normal de un pedido. */
+private fun siguienteEstado(estado: EstadoPedido): EstadoPedido? = when (estado) {
+    EstadoPedido.RECIBIDO -> EstadoPedido.EN_PREPARACION
+    EstadoPedido.EN_PREPARACION -> EstadoPedido.EN_CAMINO
+    EstadoPedido.EN_CAMINO -> EstadoPedido.ENTREGADO
+    EstadoPedido.ENTREGADO, EstadoPedido.CANCELADO -> null
 }
 
 /**
- * Gestion de pedidos del administrador.
+ * Gestión de pedidos del administrador.
  *
- * Los chips filtran la lista por estado y cada pedido tiene un boton para
- * abrir el seguimiento. Cambiar el estado real sera una llamada a la API.
+ * Los chips filtran y cada pedido permite avanzar al siguiente estado o
+ * cancelarlo. Cada cambio se manda a la Web API y se refleja en Room, así el
+ * cliente lo ve en su seguimiento.
  */
 @Composable
 fun GestionPedidosScreen(
+    contenedor: ContenedorApp,
     onVerSeguimiento: () -> Unit,
     onNavegar: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: PedidosAdminViewModel = viewModel(
+        factory = PedidosAdminViewModel.fabrica(contenedor)
+    )
 ) {
-    val filtros = listOf(FILTRO_TODOS) + EstadoPedido.entries.map { it.etiqueta }
-    var filtroSeleccionado by remember { mutableStateOf(FILTRO_TODOS) }
-
-    val pedidos = if (filtroSeleccionado == FILTRO_TODOS) {
-        DatosMock.pedidos
-    } else {
-        DatosMock.pedidos.filter { it.estado.etiqueta == filtroSeleccionado }
-    }
+    val estado by viewModel.estado.collectAsStateWithLifecycle()
 
     MarcoAdmin(
         titulo = "Gestión de pedidos",
         rutaActual = Rutas.ADMIN_PEDIDOS,
         onNavegar = onNavegar,
-        modifier = modifier
+        modifier = modifier,
+        acciones = {
+            IndicadorConexion(
+                enLinea = estado.enLinea,
+                sincronizando = estado.trabajando,
+                modifier = Modifier.padding(end = 4.dp)
+            )
+            IconButton(onClick = viewModel::sincronizar) {
+                Text(text = "⟳", fontSize = 20.sp)
+            }
+        }
     ) {
         Column(
             modifier = Modifier
@@ -88,18 +104,32 @@ fun GestionPedidosScreen(
                 modifier = Modifier.horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                filtros.forEach { filtro ->
+                ChipCategoria(
+                    texto = "Todos",
+                    seleccionado = estado.filtro == null,
+                    onClick = { viewModel.filtrar(null) }
+                )
+                EstadoPedido.entries.forEach { filtro ->
                     ChipCategoria(
-                        texto = filtro,
-                        seleccionado = filtro == filtroSeleccionado,
-                        onClick = { filtroSeleccionado = filtro }
+                        texto = filtro.etiqueta,
+                        seleccionado = estado.filtro == filtro,
+                        onClick = { viewModel.filtrar(filtro) }
                     )
                 }
             }
 
+            estado.mensaje?.let { mensaje ->
+                Spacer(Modifier.height(10.dp))
+                BandaMensaje(
+                    mensaje = mensaje,
+                    esError = false,
+                    onCerrar = viewModel::limpiarMensaje
+                )
+            }
+
             Spacer(Modifier.height(12.dp))
             Text(
-                text = "${pedidos.size} pedidos",
+                text = "${estado.visibles.size} pedidos",
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -110,11 +140,23 @@ fun GestionPedidosScreen(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 contentPadding = PaddingValues(bottom = 16.dp)
             ) {
-                items(pedidos, key = { it.folio }) { pedido ->
+                items(estado.visibles, key = { it.folio }) { pedido ->
                     TarjetaPedido(
                         pedido = pedido,
-                        onVerSeguimiento = onVerSeguimiento
+                        habilitado = !estado.trabajando,
+                        onVerSeguimiento = onVerSeguimiento,
+                        onCambiarEstado = { nuevo -> viewModel.cambiarEstado(pedido.folio, nuevo) }
                     )
+                }
+                if (estado.visibles.isEmpty()) {
+                    item {
+                        Text(
+                            text = "No hay pedidos con este filtro.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(vertical = 24.dp)
+                        )
+                    }
                 }
             }
         }
@@ -122,7 +164,12 @@ fun GestionPedidosScreen(
 }
 
 @Composable
-private fun TarjetaPedido(pedido: Pedido, onVerSeguimiento: () -> Unit) {
+private fun TarjetaPedido(
+    pedido: Pedido,
+    habilitado: Boolean,
+    onVerSeguimiento: () -> Unit,
+    onCambiarEstado: (EstadoPedido) -> Unit
+) {
     Card(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
@@ -135,15 +182,19 @@ private fun TarjetaPedido(pedido: Pedido, onVerSeguimiento: () -> Unit) {
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold
                     )
-                    Text(
-                        text = pedido.cliente,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+                    Text(text = pedido.cliente, style = MaterialTheme.typography.bodyMedium)
                     Text(
                         text = "${pedido.fecha} · ${pedido.entrega}",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
+                    if (pedido.pendienteSincronizar) {
+                        Text(
+                            text = "Pendiente de envío (creado sin conexión)",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
                 }
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
@@ -161,21 +212,25 @@ private fun TarjetaPedido(pedido: Pedido, onVerSeguimiento: () -> Unit) {
             Spacer(Modifier.height(4.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                BotonTexto(
-                    texto = "Ver seguimiento",
-                    onClick = onVerSeguimiento
-                )
+                BotonTexto(texto = "Ver seguimiento", onClick = onVerSeguimiento)
+                siguienteEstado(pedido.estado)?.let { siguiente ->
+                    BotonTexto(
+                        texto = "Marcar ${siguiente.etiqueta.lowercase()}",
+                        onClick = { if (habilitado) onCambiarEstado(siguiente) }
+                    )
+                }
+                if (!pedido.estado.esFinal) {
+                    BotonTexto(
+                        texto = "Cancelar",
+                        onClick = {
+                            if (habilitado) onCambiarEstado(EstadoPedido.CANCELADO)
+                        }
+                    )
+                }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GestionPedidosScreenPreview() {
-    AcambapanTheme {
-        GestionPedidosScreen(onVerSeguimiento = {}, onNavegar = {})
     }
 }

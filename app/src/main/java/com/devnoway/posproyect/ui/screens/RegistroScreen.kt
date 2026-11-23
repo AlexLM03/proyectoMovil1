@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,30 +20,44 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.devnoway.posproyect.di.ContenedorApp
+import com.devnoway.posproyect.ui.components.BandaMensaje
 import com.devnoway.posproyect.ui.components.BarraSuperior
 import com.devnoway.posproyect.ui.components.BotonPrincipal
 import com.devnoway.posproyect.ui.components.BotonTexto
 import com.devnoway.posproyect.ui.components.CampoTexto
 import com.devnoway.posproyect.ui.components.MarcaAcambapan
-import com.devnoway.posproyect.ui.theme.AcambapanTheme
+import com.devnoway.posproyect.ui.viewmodel.RegistroViewModel
 
 /**
  * Registro de un cliente nuevo.
- * El boton "Crear mi cuenta" solo navega al catalogo: no guarda nada todavia.
+ *
+ * `POST /auth/registro` crea la cuenta en MySQL, guarda la sesión y entra al
+ * catálogo. Si falta conexión se avisa: el registro necesita red.
  */
 @Composable
 fun RegistroScreen(
+    contenedor: ContenedorApp,
     onRegistrado: () -> Unit,
     onVolverLogin: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: RegistroViewModel = viewModel(factory = RegistroViewModel.fabrica(contenedor))
 ) {
+    val estado by viewModel.estado.collectAsStateWithLifecycle()
+    val sesion by viewModel.sesion.collectAsStateWithLifecycle()
+
     var nombre by remember { mutableStateOf("") }
     var correo by remember { mutableStateOf("") }
     var telefono by remember { mutableStateOf("") }
     var direccion by remember { mutableStateOf("") }
     var contrasena by remember { mutableStateOf("") }
+
+    LaunchedEffect(sesion) {
+        if (sesion != null) onRegistrado()
+    }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -61,13 +76,38 @@ fun RegistroScreen(
             Spacer(Modifier.height(4.dp))
 
             CampoTexto(nombre, { nombre = it }, "Nombre completo")
-            CampoTexto(correo, { correo = it }, "Correo electrónico", tipoTeclado = KeyboardType.Email)
+            CampoTexto(
+                correo,
+                { correo = it },
+                "Correo electrónico",
+                tipoTeclado = KeyboardType.Email
+            )
             CampoTexto(telefono, { telefono = it }, "Teléfono", tipoTeclado = KeyboardType.Phone)
             CampoTexto(direccion, { direccion = it }, "Dirección de entrega", lineas = 2)
             CampoTexto(contrasena, { contrasena = it }, "Contraseña", esContrasena = true)
 
-            Spacer(Modifier.height(8.dp))
-            BotonPrincipal(texto = "Crear mi cuenta", onClick = onRegistrado)
+            estado.error?.let { mensaje ->
+                BandaMensaje(
+                    mensaje = mensaje,
+                    esError = true,
+                    onCerrar = viewModel::limpiarError
+                )
+            }
+
+            Spacer(Modifier.height(4.dp))
+            BotonPrincipal(
+                texto = if (estado.cargando) "Creando cuenta…" else "Crear mi cuenta",
+                onClick = {
+                    viewModel.registrar(
+                        nombre = nombre,
+                        correo = correo,
+                        telefono = telefono,
+                        direccion = direccion,
+                        contrasena = contrasena
+                    )
+                },
+                habilitado = !estado.cargando
+            )
             BotonTexto(texto = "Ya tengo cuenta, iniciar sesión", onClick = onVolverLogin)
 
             Text(
@@ -77,13 +117,5 @@ fun RegistroScreen(
             )
             Spacer(Modifier.height(16.dp))
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun RegistroScreenPreview() {
-    AcambapanTheme {
-        RegistroScreen(onRegistrado = {}, onVolverLogin = {})
     }
 }
