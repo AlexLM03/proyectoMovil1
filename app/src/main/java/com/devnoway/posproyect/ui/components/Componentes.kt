@@ -54,9 +54,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devnoway.posproyect.R
-import com.devnoway.posproyect.data.Producto
-import com.devnoway.posproyect.data.enPesos
+import com.devnoway.posproyect.data.modelo.Producto
+import com.devnoway.posproyect.data.modelo.enPesos
 import com.devnoway.posproyect.navigation.Rutas
+import androidx.compose.foundation.shape.CircleShape
+import com.devnoway.posproyect.ui.theme.RojoAlerta
+import com.devnoway.posproyect.ui.theme.VerdeExito
 
 /**
  * Piezas de interfaz que repiten todas las pantallas de Acambapan.
@@ -553,4 +556,78 @@ fun DialogoPendiente(
         title = { Text(titulo) },
         text = { Text(mensaje) }
     )
+}
+
+// ---------------------------------------------------------------------------
+// Estado de la conexion y mensajes
+// ---------------------------------------------------------------------------
+
+/** Punto de color que dice si la app está en línea o trabajando sin conexión. */
+@Composable
+fun IndicadorConexion(
+    enLinea: Boolean,
+    sincronizando: Boolean = false,
+    modifier: Modifier = Modifier
+) {
+    val color = when {
+        sincronizando -> MaterialTheme.colorScheme.secondary
+        enLinea -> VerdeExito
+        else -> RojoAlerta
+    }
+    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            modifier = Modifier
+                .size(8.dp)
+                .clip(CircleShape)
+                .background(color)
+        )
+        Spacer(Modifier.width(6.dp))
+        Text(
+            text = when {
+                sincronizando -> "Sincronizando…"
+                enLinea -> "En línea"
+                else -> "Sin conexión"
+            },
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+/** Banda para mostrar el resultado de una operación (error o aviso). */
+@Composable
+fun BandaMensaje(
+    mensaje: String,
+    modifier: Modifier = Modifier,
+    esError: Boolean = false,
+    onCerrar: (() -> Unit)? = null
+) {
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        color = if (esError) {
+            MaterialTheme.colorScheme.errorContainer
+        } else {
+            MaterialTheme.colorScheme.secondaryContainer
+        },
+        contentColor = if (esError) {
+            MaterialTheme.colorScheme.onErrorContainer
+        } else {
+            MaterialTheme.colorScheme.onSecondaryContainer
+        },
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = mensaje,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.weight(1f)
+            )
+            if (onCerrar != null) {
+                TextButton(onClick = onCerrar) { Text("OK") }
+            }
+        }
+    }
 }
