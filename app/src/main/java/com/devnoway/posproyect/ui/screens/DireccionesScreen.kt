@@ -24,10 +24,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.devnoway.posproyect.R
 import com.devnoway.posproyect.data.modelo.Direccion
 import com.devnoway.posproyect.di.ContenedorApp
 import com.devnoway.posproyect.navigation.Rutas
@@ -63,7 +65,7 @@ fun DireccionesScreen(
     var confirmandoBorrado by remember { mutableStateOf<Direccion?>(null) }
 
     MarcoCliente(
-        titulo = "Direcciones",
+        titulo = stringResource(R.string.dir_titulo),
         rutaActual = Rutas.PERFIL,
         onNavegar = onNavegar,
         onAtras = onAtras,
@@ -77,7 +79,7 @@ fun DireccionesScreen(
         ) {
             Spacer(Modifier.height(12.dp))
             if (estado.usuario == null) {
-                BandaMensaje(mensaje = "Inicia sesión para guardar tus direcciones.")
+                BandaMensaje(mensaje = stringResource(R.string.dir_sin_sesion_guardar))
                 Spacer(Modifier.height(12.dp))
             }
 
@@ -95,13 +97,13 @@ fun DireccionesScreen(
             }
 
             BotonPrincipal(
-                texto = "Agregar dirección",
+                texto = stringResource(R.string.dir_agregar),
                 onClick = { creando = true },
                 habilitado = estado.usuario != null && !estado.trabajando
             )
 
             Spacer(Modifier.height(16.dp))
-            TituloSeccion("Mis direcciones")
+            TituloSeccion(stringResource(R.string.dir_mis_direcciones))
             Spacer(Modifier.height(8.dp))
 
             LazyColumn(
@@ -122,9 +124,9 @@ fun DireccionesScreen(
                     item {
                         Text(
                             text = if (estado.usuario == null) {
-                                "Inicia sesión para ver tus direcciones."
+                                stringResource(R.string.dir_sin_sesion_ver)
                             } else {
-                                "Todavía no tienes direcciones guardadas. Agrega la primera para agilizar tus pedidos."
+                                stringResource(R.string.dir_vacio)
                             },
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -161,18 +163,24 @@ fun DireccionesScreen(
     confirmandoBorrado?.let { direccion ->
         AlertDialog(
             onDismissRequest = { confirmandoBorrado = null },
-            title = { Text("Eliminar dirección") },
-            text = { Text("¿Eliminar \"${direccion.alias}\"? Esta acción no se puede deshacer.") },
+            title = { Text(stringResource(R.string.dir_eliminar_titulo)) },
+            text = {
+                Text(
+                    stringResource(R.string.dir_confirmar_borrado, direccion.alias)
+                )
+            },
             confirmButton = {
                 TextButton(
                     onClick = {
                         viewModel.eliminar(direccion.id)
                         confirmandoBorrado = null
                     }
-                ) { Text("Eliminar") }
+                ) { Text(stringResource(R.string.dir_eliminar)) }
             },
             dismissButton = {
-                TextButton(onClick = { confirmandoBorrado = null }) { Text("Cancelar") }
+                TextButton(onClick = { confirmandoBorrado = null }) {
+                    Text(stringResource(R.string.dir_cancelar))
+                }
             }
         )
     }
@@ -199,7 +207,10 @@ private fun TarjetaDireccion(
                     modifier = Modifier.weight(1f)
                 )
                 if (direccion.predeterminada) {
-                    EtiquetaEstado(texto = "Predeterminada", color = VerdeExito)
+                    EtiquetaEstado(
+                        texto = stringResource(R.string.dir_predeterminada),
+                        color = VerdeExito
+                    )
                 }
             }
             Spacer(Modifier.height(4.dp))
@@ -217,12 +228,18 @@ private fun TarjetaDireccion(
             ) {
                 if (!direccion.predeterminada) {
                     BotonTexto(
-                        texto = "Predeterminada",
+                        texto = stringResource(R.string.dir_predeterminada),
                         onClick = { if (habilitado) onPredeterminar() }
                     )
                 }
-                BotonTexto(texto = "Editar", onClick = { if (habilitado) onEditar() })
-                BotonTexto(texto = "Eliminar", onClick = { if (habilitado) onEliminar() })
+                BotonTexto(
+                    texto = stringResource(R.string.dir_editar),
+                    onClick = { if (habilitado) onEditar() }
+                )
+                BotonTexto(
+                    texto = stringResource(R.string.dir_eliminar),
+                    onClick = { if (habilitado) onEliminar() }
+                )
             }
         }
     }
@@ -241,26 +258,44 @@ private fun DialogoDireccion(
         mutableStateOf(direccion?.predeterminada ?: (direccion == null))
     }
     var error by remember { mutableStateOf<String?>(null) }
+    val textoErrorCampos = stringResource(R.string.dir_error_campos)
 
     AlertDialog(
         onDismissRequest = onCerrar,
-        title = { Text(if (direccion == null) "Agregar dirección" else "Editar dirección") },
+        title = {
+            Text(
+                if (direccion == null) {
+                    stringResource(R.string.dir_agregar)
+                } else {
+                    stringResource(R.string.dir_editar_titulo)
+                }
+            )
+        },
         text = {
             Column {
-                CampoTexto(alias, { alias = it }, "Alias (Casa, Trabajo…)")
+                CampoTexto(
+                    alias,
+                    { alias = it },
+                    stringResource(R.string.dir_alias_etiqueta)
+                )
                 Spacer(Modifier.height(8.dp))
-                CampoTexto(calle, { calle = it }, "Calle, número y colonia", lineas = 2)
+                CampoTexto(
+                    calle,
+                    { calle = it },
+                    stringResource(R.string.dir_calle_etiqueta),
+                    lineas = 2
+                )
                 Spacer(Modifier.height(8.dp))
                 CampoTexto(
                     valor = referencias,
                     onValorCambio = { referencias = it },
-                    etiqueta = "Referencias para el repartidor",
+                    etiqueta = stringResource(R.string.dir_referencias_etiqueta),
                     lineas = 2
                 )
                 Spacer(Modifier.height(12.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = "Usar como predeterminada",
+                        text = stringResource(R.string.dir_usar_predeterminada),
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.weight(1f)
                     )
@@ -280,7 +315,7 @@ private fun DialogoDireccion(
             TextButton(
                 onClick = {
                     if (alias.isBlank() || calle.isBlank()) {
-                        error = "Escribe un alias y la dirección."
+                        error = textoErrorCampos
                         return@TextButton
                     }
                     onGuardar(
@@ -294,10 +329,10 @@ private fun DialogoDireccion(
                         )
                     )
                 }
-            ) { Text("Guardar") }
+            ) { Text(stringResource(R.string.dir_guardar)) }
         },
         dismissButton = {
-            TextButton(onClick = onCerrar) { Text("Cancelar") }
+            TextButton(onClick = onCerrar) { Text(stringResource(R.string.dir_cancelar)) }
         }
     )
 }

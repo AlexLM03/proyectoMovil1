@@ -24,11 +24,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.devnoway.posproyect.R
 import com.devnoway.posproyect.data.modelo.Notificacion
 import com.devnoway.posproyect.data.modelo.fechaLegible
 import com.devnoway.posproyect.di.ContenedorApp
@@ -54,7 +56,7 @@ fun NotificacionesScreen(
     val estado by viewModel.estado.collectAsStateWithLifecycle()
 
     MarcoCliente(
-        titulo = "Notificaciones",
+        titulo = stringResource(R.string.not_titulo),
         rutaActual = Rutas.PERFIL,
         onNavegar = onNavegar,
         onAtras = onAtras,
@@ -79,7 +81,7 @@ fun NotificacionesScreen(
             Spacer(Modifier.height(12.dp))
 
             if (estado.usuario == null) {
-                BandaMensaje(mensaje = "Inicia sesión para ver tus avisos.")
+                BandaMensaje(mensaje = stringResource(R.string.not_sin_sesion))
                 Spacer(Modifier.height(10.dp))
             }
 
@@ -92,10 +94,10 @@ fun NotificacionesScreen(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TituloSeccion("Tus avisos")
+                TituloSeccion(stringResource(R.string.not_tus_avisos))
                 Spacer(Modifier.weight(1f))
                 Text(
-                    text = "${estado.noLeidas} sin leer",
+                    text = stringResource(R.string.not_sin_leer, estado.noLeidas),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -103,7 +105,7 @@ fun NotificacionesScreen(
             if (estado.noLeidas > 0) {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                     BotonTexto(
-                        texto = "Marcar todas como leídas",
+                        texto = stringResource(R.string.not_marcar_todas),
                         onClick = viewModel::marcarTodasLeidas
                     )
                 }
@@ -122,9 +124,9 @@ fun NotificacionesScreen(
                     item {
                         Text(
                             text = if (estado.usuario == null) {
-                                "Inicia sesión para ver tus avisos."
+                                stringResource(R.string.not_sin_sesion)
                             } else {
-                                "No tienes avisos todavía. Aquí verás los cambios de tus pedidos."
+                                stringResource(R.string.not_vacio)
                             },
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,

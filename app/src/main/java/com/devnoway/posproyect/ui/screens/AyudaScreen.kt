@@ -24,36 +24,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devnoway.posproyect.BuildConfig
+import com.devnoway.posproyect.R
 import com.devnoway.posproyect.navigation.Rutas
 import com.devnoway.posproyect.ui.components.BotonSecundario
 import com.devnoway.posproyect.ui.components.MarcoCliente
 import com.devnoway.posproyect.ui.components.TituloSeccion
 
-/** Preguntas frecuentes de la panadería. */
-private val PREGUNTAS = listOf(
-    "¿Cómo hago un pedido?" to
-        "Elige productos en el catálogo, agrégalos al carrito y confirma. Recibirás un folio para seguir tu pedido.",
-    "¿Puedo pedir sin internet?" to
-        "Sí. El pedido se guarda en el teléfono y se envía a la panadería en cuanto vuelve la conexión.",
-    "¿Cómo sigo mi pedido?" to
-        "En la pestaña Pedido verás el avance: recibido, en preparación, en camino y entregado. Toca ⟳ para actualizar.",
-    "¿Qué formas de pago aceptan?" to
-        "Efectivo al recibir, tarjeta con la terminal del repartidor y transferencia SPEI. Se eligen en Perfil → Métodos de pago.",
-    "¿Cuánto cuesta el envío?" to
-        "El envío a domicilio cuesta $30 dentro de Acámbaro y es gratis en pedidos de $250 o más. Recoger en la panadería no tiene costo.",
-    "¿Cómo cambio mi dirección?" to
-        "En Perfil → Direcciones de entrega puedes agregar, editar y marcar tu dirección predeterminada.",
-    "¿Qué hago si mi pedido no llega?" to
-        "Llama a la panadería o escríbenos; con tu folio podemos revisar el estado y al repartidor asignado."
-)
-
-/**
- * Ayuda y soporte: preguntas frecuentes, contacto directo y datos de la app.
- */
+/** Ayuda y soporte: preguntas frecuentes, contacto directo y datos de la app. */
 @Composable
 fun AyudaScreen(
     onAtras: () -> Unit,
@@ -63,8 +45,26 @@ fun AyudaScreen(
     val contexto = LocalContext.current
     var abierta by remember { mutableStateOf<Int?>(0) }
 
+    val asuntoCorreo = stringResource(R.string.ayu_asunto_correo)
+    val preguntas = listOf(
+        stringResource(R.string.ayu_faq_pedido_pregunta) to
+            stringResource(R.string.ayu_faq_pedido_respuesta),
+        stringResource(R.string.ayu_faq_sin_internet_pregunta) to
+            stringResource(R.string.ayu_faq_sin_internet_respuesta),
+        stringResource(R.string.ayu_faq_seguimiento_pregunta) to
+            stringResource(R.string.ayu_faq_seguimiento_respuesta),
+        stringResource(R.string.ayu_faq_pagos_pregunta) to
+            stringResource(R.string.ayu_faq_pagos_respuesta),
+        stringResource(R.string.ayu_faq_envio_pregunta) to
+            stringResource(R.string.ayu_faq_envio_respuesta),
+        stringResource(R.string.ayu_faq_direccion_pregunta) to
+            stringResource(R.string.ayu_faq_direccion_respuesta),
+        stringResource(R.string.ayu_faq_no_llega_pregunta) to
+            stringResource(R.string.ayu_faq_no_llega_respuesta)
+    )
+
     MarcoCliente(
-        titulo = "Ayuda y soporte",
+        titulo = stringResource(R.string.ayu_titulo),
         rutaActual = Rutas.PERFIL,
         onNavegar = onNavegar,
         onAtras = onAtras,
@@ -78,14 +78,14 @@ fun AyudaScreen(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Text(
-                text = "¿En qué te ayudamos?",
+                text = stringResource(R.string.ayu_encabezado),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
             )
 
-            TituloSeccion("Preguntas frecuentes")
-            PREGUNTAS.forEachIndexed { indice, (pregunta, respuesta) ->
+            TituloSeccion(stringResource(R.string.ayu_faq_titulo))
+            preguntas.forEachIndexed { indice, (pregunta, respuesta) ->
                 val expandida = abierta == indice
                 Card(
                     modifier = Modifier
@@ -123,14 +123,14 @@ fun AyudaScreen(
             }
 
             Spacer(Modifier.height(6.dp))
-            TituloSeccion("Contacto")
+            TituloSeccion(stringResource(R.string.ayu_contacto_titulo))
             Text(
-                text = "Panadería Acambapan · Av. Juárez 165, Acámbaro, Guanajuato\nLunes a domingo, 6:00 a 21:00",
+                text = stringResource(R.string.ayu_contacto_direccion),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             BotonSecundario(
-                texto = "Llamar a la panadería",
+                texto = stringResource(R.string.ayu_boton_llamar),
                 onClick = {
                     contexto.startActivity(
                         Intent(Intent.ACTION_DIAL, Uri.parse("tel:4450000001"))
@@ -138,13 +138,13 @@ fun AyudaScreen(
                 }
             )
             BotonSecundario(
-                texto = "Escribir por correo",
+                texto = stringResource(R.string.ayu_boton_correo),
                 onClick = {
                     val correo = Intent(
                         Intent.ACTION_SENDTO,
                         Uri.parse("mailto:soporte@acambapan.devnoway.com")
                     ).apply {
-                        putExtra(Intent.EXTRA_SUBJECT, "Ayuda con mi pedido")
+                        putExtra(Intent.EXTRA_SUBJECT, asuntoCorreo)
                     }
                     contexto.startActivity(correo)
                 }
@@ -152,7 +152,11 @@ fun AyudaScreen(
 
             Spacer(Modifier.height(8.dp))
             Text(
-                text = "Acambapan ${BuildConfig.VERSION_NAME} · datos de ${BuildConfig.API_BASE_URL}",
+                text = stringResource(
+                    R.string.ayu_pie_version,
+                    BuildConfig.VERSION_NAME,
+                    BuildConfig.API_BASE_URL
+                ),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

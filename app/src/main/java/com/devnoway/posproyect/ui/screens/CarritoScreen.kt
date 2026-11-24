@@ -20,12 +20,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.devnoway.posproyect.R
 import com.devnoway.posproyect.data.modelo.MetodoPago
 import com.devnoway.posproyect.data.modelo.enPesos
 import com.devnoway.posproyect.di.ContenedorApp
@@ -39,6 +41,8 @@ import com.devnoway.posproyect.ui.components.FilaDato
 import com.devnoway.posproyect.ui.components.MarcoCliente
 import com.devnoway.posproyect.ui.components.RecuadroEmoji
 import com.devnoway.posproyect.ui.components.TituloSeccion
+import com.devnoway.posproyect.ui.descripcionRes
+import com.devnoway.posproyect.ui.etiquetaRes
 import com.devnoway.posproyect.ui.viewmodel.CarritoViewModel
 
 /**
@@ -67,7 +71,7 @@ fun CarritoScreen(
     }
 
     MarcoCliente(
-        titulo = "Carrito",
+        titulo = stringResource(R.string.car_titulo),
         rutaActual = Rutas.CARRITO,
         onNavegar = onNavegar,
         modifier = modifier
@@ -79,11 +83,17 @@ fun CarritoScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            TituloSeccion("Tu pedido (${estado.lineas.size} productos · ${estado.piezas} piezas)")
+            TituloSeccion(
+                stringResource(
+                    R.string.car_pedido_resumen,
+                    estado.lineas.size,
+                    estado.piezas
+                )
+            )
 
             if (estado.vacio) {
                 Text(
-                    text = "Tu carrito está vacío. Agrega pan, pasteles o bebidas del catálogo.",
+                    text = stringResource(R.string.car_vacio),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
@@ -91,7 +101,10 @@ fun CarritoScreen(
                         .fillMaxWidth()
                         .padding(vertical = 24.dp)
                 )
-                BotonSecundario(texto = "Ir al catálogo", onClick = onSeguirComprando)
+                BotonSecundario(
+                    texto = stringResource(R.string.car_ir_catalogo),
+                    onClick = onSeguirComprando
+                )
             }
 
             estado.lineas.forEach { linea ->
@@ -110,7 +123,11 @@ fun CarritoScreen(
                                     fontWeight = FontWeight.SemiBold
                                 )
                                 Text(
-                                    text = "${linea.cantidad} x ${linea.producto.precio.enPesos()}",
+                                    text = stringResource(
+                                        R.string.car_linea_cantidad_precio,
+                                        linea.cantidad,
+                                        linea.producto.precio.enPesos()
+                                    ),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -166,15 +183,15 @@ fun CarritoScreen(
 
             if (!estado.vacio) {
                 Spacer(Modifier.height(4.dp))
-                TituloSeccion("Entrega")
+                TituloSeccion(stringResource(R.string.car_entrega))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     ChipCategoria(
-                        texto = "A domicilio",
+                        texto = stringResource(R.string.car_domicilio),
                         seleccionado = estado.aDomicilio,
                         onClick = { viewModel.cambiarEntrega(true) }
                     )
                     ChipCategoria(
-                        texto = "Para recoger",
+                        texto = stringResource(R.string.car_recoger),
                         seleccionado = !estado.aDomicilio,
                         onClick = { viewModel.cambiarEntrega(false) }
                     )
@@ -184,30 +201,30 @@ fun CarritoScreen(
                     CampoTexto(
                         valor = estado.direccion,
                         onValorCambio = viewModel::cambiarDireccion,
-                        etiqueta = "Dirección de entrega",
+                        etiqueta = stringResource(R.string.car_direccion_etiqueta),
                         lineas = 2
                     )
                 }
 
                 Spacer(Modifier.height(4.dp))
-                TituloSeccion("Pago")
+                TituloSeccion(stringResource(R.string.car_pago))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     MetodoPago.entries.forEach { metodo ->
                         ChipCategoria(
-                            texto = metodo.etiqueta,
+                            texto = stringResource(metodo.etiquetaRes),
                             seleccionado = estado.metodoPago == metodo,
                             onClick = { viewModel.cambiarMetodoPago(metodo) }
                         )
                     }
                 }
                 Text(
-                    text = estado.metodoPago.descripcion,
+                    text = stringResource(estado.metodoPago.descripcionRes),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
                 Spacer(Modifier.height(4.dp))
-                TituloSeccion("Resumen")
+                TituloSeccion(stringResource(R.string.car_resumen))
                 Card(
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surfaceVariant
@@ -215,26 +232,39 @@ fun CarritoScreen(
                     elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
                 ) {
                     Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                        FilaDato(etiqueta = "Subtotal", valor = estado.subtotal.enPesos())
                         FilaDato(
-                            etiqueta = "Envío",
+                            etiqueta = stringResource(R.string.car_subtotal),
+                            valor = estado.subtotal.enPesos()
+                        )
+                        FilaDato(
+                            etiqueta = stringResource(R.string.car_envio),
                             valor = if (estado.costoEnvio == 0.0) {
-                                "Gratis"
+                                stringResource(R.string.car_gratis)
                             } else {
                                 estado.costoEnvio.enPesos()
                             }
                         )
-                        FilaDato(etiqueta = "Total", valor = estado.total.enPesos())
+                        FilaDato(
+                            etiqueta = stringResource(R.string.car_total),
+                            valor = estado.total.enPesos()
+                        )
                     }
                 }
 
                 Spacer(Modifier.height(4.dp))
                 BotonPrincipal(
-                    texto = if (estado.confirmando) "Guardando pedido…" else "Confirmar pedido",
+                    texto = if (estado.confirmando) {
+                        stringResource(R.string.car_guardando)
+                    } else {
+                        stringResource(R.string.car_confirmar)
+                    },
                     onClick = viewModel::confirmarPedido,
                     habilitado = !estado.confirmando && !estado.vacio
                 )
-                BotonSecundario(texto = "Seguir comprando", onClick = onSeguirComprando)
+                BotonSecundario(
+                    texto = stringResource(R.string.car_seguir_comprando),
+                    onClick = onSeguirComprando
+                )
             }
         }
     }

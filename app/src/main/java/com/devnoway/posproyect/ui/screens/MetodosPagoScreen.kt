@@ -18,16 +18,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.devnoway.posproyect.R
 import com.devnoway.posproyect.data.modelo.MetodoPago
 import com.devnoway.posproyect.di.ContenedorApp
 import com.devnoway.posproyect.navigation.Rutas
 import com.devnoway.posproyect.ui.components.BandaMensaje
 import com.devnoway.posproyect.ui.components.MarcoCliente
 import com.devnoway.posproyect.ui.components.TituloSeccion
+import com.devnoway.posproyect.ui.descripcionRes
+import com.devnoway.posproyect.ui.etiquetaRes
 import com.devnoway.posproyect.ui.viewmodel.MetodosPagoViewModel
 
 /**
@@ -49,7 +53,7 @@ fun MetodosPagoScreen(
     val estado by viewModel.estado.collectAsStateWithLifecycle()
 
     MarcoCliente(
-        titulo = "Métodos de pago",
+        titulo = stringResource(R.string.pago_titulo),
         rutaActual = Rutas.PERFIL,
         onNavegar = onNavegar,
         onAtras = onAtras,
@@ -63,14 +67,14 @@ fun MetodosPagoScreen(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Text(
-                text = "Elige cómo quieres pagar tus pedidos. La app no guarda números de tarjeta: el cobro se hace al recibir o por transferencia.",
+                text = stringResource(R.string.pago_intro),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             if (estado.usuario == null) {
                 BandaMensaje(
-                    mensaje = "Inicia sesión para guardar tu método de pago preferido.",
+                    mensaje = stringResource(R.string.pago_sin_sesion),
                     esError = true
                 )
             }
@@ -87,7 +91,7 @@ fun MetodosPagoScreen(
             }
 
             Spacer(Modifier.height(4.dp))
-            TituloSeccion("Formas de pago")
+            TituloSeccion(stringResource(R.string.pago_formas))
 
             MetodoPago.entries.forEach { metodo ->
                 val elegido = estado.seleccionado == metodo
@@ -116,12 +120,12 @@ fun MetodosPagoScreen(
                         )
                         Column(modifier = Modifier.padding(start = 6.dp)) {
                             Text(
-                                text = metodo.etiqueta,
+                                text = stringResource(metodo.etiquetaRes),
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.SemiBold
                             )
                             Text(
-                                text = metodo.descripcion,
+                                text = stringResource(metodo.descripcionRes),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -134,11 +138,11 @@ fun MetodosPagoScreen(
             Text(
                 text = when (estado.seleccionado) {
                     MetodoPago.EFECTIVO ->
-                        "Pagas en efectivo cuando recibes o recoges tu pedido."
+                        stringResource(R.string.pago_efectivo_detalle)
                     MetodoPago.TARJETA_TERMINAL ->
-                        "El repartidor lleva terminal; también puedes pagar con tarjeta al recoger."
+                        stringResource(R.string.pago_tarjeta_detalle)
                     MetodoPago.TRANSFERENCIA ->
-                        "Te compartimos la CLABE al confirmar; manda tu comprobante por WhatsApp."
+                        stringResource(R.string.pago_transferencia_detalle)
                 },
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant

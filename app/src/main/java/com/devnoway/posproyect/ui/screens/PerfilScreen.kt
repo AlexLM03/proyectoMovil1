@@ -16,11 +16,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.devnoway.posproyect.R
 import com.devnoway.posproyect.di.ContenedorApp
 import com.devnoway.posproyect.navigation.Rutas
 import com.devnoway.posproyect.ui.components.BandaMensaje
@@ -56,7 +58,7 @@ fun PerfilScreen(
     val usuario = estado.usuario
 
     MarcoCliente(
-        titulo = "Mi perfil",
+        titulo = stringResource(R.string.per_titulo),
         rutaActual = Rutas.PERFIL,
         onNavegar = onNavegar,
         modifier = modifier
@@ -76,15 +78,15 @@ fun PerfilScreen(
                 Spacer(Modifier.width(16.dp))
                 Column {
                     Text(
-                        text = usuario?.nombre ?: "Invitado",
+                        text = usuario?.nombre ?: stringResource(R.string.per_invitado),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = when {
-                            usuario == null -> "Sin sesión: navegando como invitado"
-                            usuario.esAdmin -> "Administrador de la panadería"
-                            else -> "Cliente registrado"
+                            usuario == null -> stringResource(R.string.per_sin_sesion)
+                            usuario.esAdmin -> stringResource(R.string.per_rol_admin)
+                            else -> stringResource(R.string.per_rol_cliente)
                         },
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -93,11 +95,11 @@ fun PerfilScreen(
             }
 
             if (usuario != null) {
-                TituloSeccion("Mis datos")
+                TituloSeccion(stringResource(R.string.per_mis_datos))
                 Column {
-                    FilaDato("Correo", usuario.correo)
-                    FilaDato("Teléfono", usuario.telefono)
-                    FilaDato("Dirección", usuario.direccion)
+                    FilaDato(stringResource(R.string.per_correo), usuario.correo)
+                    FilaDato(stringResource(R.string.per_telefono), usuario.telefono)
+                    FilaDato(stringResource(R.string.per_direccion), usuario.direccion)
                 }
             }
 
@@ -110,57 +112,61 @@ fun PerfilScreen(
             }
 
             Spacer(Modifier.height(4.dp))
-            TituloSeccion("Ajustes")
+            TituloSeccion(stringResource(R.string.per_ajustes))
             FilaNavegacion(
                 emoji = "\uD83E\uDDFE",
-                titulo = "Mis pedidos",
-                subtitulo = "${estado.pedidos.size} pedido(s) guardados en este teléfono",
+                titulo = stringResource(R.string.per_mis_pedidos),
+                subtitulo = stringResource(R.string.per_mis_pedidos_sub, estado.pedidos.size),
                 onClick = onMisPedidos
             )
             FilaNavegacion(
                 emoji = "\uD83D\uDCCD",
-                titulo = "Direcciones de entrega",
-                subtitulo = "Agregar o cambiar direcciones",
+                titulo = stringResource(R.string.per_direcciones),
+                subtitulo = stringResource(R.string.per_direcciones_sub),
                 onClick = onDirecciones
             )
             FilaNavegacion(
                 emoji = "\uD83D\uDCB3",
-                titulo = "Métodos de pago",
-                subtitulo = "Efectivo, terminal o transferencia",
+                titulo = stringResource(R.string.per_metodos_pago),
+                subtitulo = stringResource(R.string.per_metodos_pago_sub),
                 onClick = onMetodosPago
             )
             FilaNavegacion(
                 emoji = "\uD83D\uDD14",
-                titulo = "Notificaciones",
-                subtitulo = "${estado.noLeidas} sin leer · avisos del pedido",
+                titulo = stringResource(R.string.per_notificaciones),
+                subtitulo = stringResource(R.string.per_notificaciones_sub, estado.noLeidas),
                 onClick = onNotificaciones
             )
             FilaNavegacion(
                 emoji = "\uD83D\uDD04",
-                titulo = "Sincronizar ahora",
+                titulo = stringResource(R.string.per_sincronizar),
                 subtitulo = if (estado.enLinea) {
-                    "Traer pedidos y avisos del servidor"
+                    stringResource(R.string.per_sincronizar_online)
                 } else {
-                    "Sin conexión: se usan los datos guardados"
+                    stringResource(R.string.per_sincronizar_offline)
                 },
                 onClick = viewModel::sincronizar
             )
             FilaNavegacion(
                 emoji = "\u2699",
-                titulo = "Modo administrador",
-                subtitulo = "Panel de la panadería",
+                titulo = stringResource(R.string.per_modo_admin),
+                subtitulo = stringResource(R.string.per_modo_admin_sub),
                 onClick = onModoAdministrador
             )
             FilaNavegacion(
                 emoji = "\u2753",
-                titulo = "Ayuda y soporte",
-                subtitulo = "Preguntas frecuentes y contacto",
+                titulo = stringResource(R.string.per_ayuda),
+                subtitulo = stringResource(R.string.per_ayuda_sub),
                 onClick = onAyuda
             )
 
             Spacer(Modifier.height(8.dp))
             BotonSecundario(
-                texto = if (usuario == null) "Iniciar sesión" else "Cerrar sesión",
+                texto = if (usuario == null) {
+                    stringResource(R.string.per_iniciar_sesion)
+                } else {
+                    stringResource(R.string.per_cerrar_sesion)
+                },
                 onClick = {
                     if (usuario == null) {
                         onCerrarSesion()
@@ -171,7 +177,7 @@ fun PerfilScreen(
                 }
             )
             Text(
-                text = "Acambapan · versión 1.0 · Room + Retrofit",
+                text = stringResource(R.string.per_version),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,

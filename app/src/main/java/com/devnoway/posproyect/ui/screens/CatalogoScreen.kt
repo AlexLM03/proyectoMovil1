@@ -22,12 +22,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.devnoway.posproyect.R
 import com.devnoway.posproyect.di.ContenedorApp
 import com.devnoway.posproyect.navigation.Rutas
 import com.devnoway.posproyect.ui.components.BandaMensaje
@@ -81,7 +83,7 @@ fun CatalogoScreen(
             CampoTexto(
                 valor = estado.busqueda,
                 onValorCambio = viewModel::cambiarBusqueda,
-                etiqueta = "Buscar pan, pastel o bebida"
+                etiqueta = stringResource(R.string.cat_buscar_etiqueta)
             )
 
             Spacer(Modifier.height(10.dp))
@@ -90,7 +92,7 @@ fun CatalogoScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 ChipCategoria(
-                    texto = "Todos",
+                    texto = stringResource(R.string.cat_todos),
                     seleccionado = estado.categoriaId == null,
                     onClick = { viewModel.seleccionarCategoria(null) }
                 )
@@ -120,10 +122,10 @@ fun CatalogoScreen(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TituloSeccion("Nuestro catálogo")
+                TituloSeccion(stringResource(R.string.cat_titulo_catalogo))
                 Spacer(Modifier.weight(1f))
                 Text(
-                    text = "${estado.visibles.size} artículos",
+                    text = stringResource(R.string.cat_articulos, estado.visibles.size),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -145,9 +147,9 @@ fun CatalogoScreen(
                     item {
                         Text(
                             text = if (estado.enLinea) {
-                                "No hay productos que coincidan con tu búsqueda."
+                                stringResource(R.string.cat_sin_resultados)
                             } else {
-                                "Todavía no hay catálogo guardado. Conéctate a internet y toca ⟳."
+                                stringResource(R.string.cat_sin_catalogo)
                             },
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -179,12 +181,12 @@ private fun PromocionEnvio() {
             Spacer(Modifier.width(12.dp))
             Column {
                 Text(
-                    text = "Envío gratis",
+                    text = stringResource(R.string.cat_envio_gratis),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "En pedidos mayores a $250 dentro de Acámbaro",
+                    text = stringResource(R.string.cat_envio_gratis_detalle),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  English strings for the customer account screens. The Spanish original lives
+  in res/values/strings_cuenta.xml; both files must keep identical keys.
+  Profile, addresses, payment methods, notifications and restricted access.
+-->
+<resources>
+    <!-- Profile -->
+    <string name="per_titulo">My profile</string>
+    <string name="per_invitado">Guest</string>
+    <string name="per_sin_sesion">No session: browsing as a guest</string>
+    <string name="per_rol_admin">Bakery administrator</string>
+    <string name="per_rol_cliente">Registered customer</string>
+    <string name="per_mis_datos">My details</string>
+    <string name="per_correo">Email</string>
+    <string name="per_telefono">Phone</string>
+    <string name="per_direccion">Address</string>
+    <string name="per_ajustes">Settings</string>
+    <string name="per_mis_pedidos">My orders</string>
+    <string name="per_mis_pedidos_sub">%1$d order(s) saved on this phone</string>
+    <string name="per_direcciones">Delivery addresses</string>
+    <string name="per_direcciones_sub">Add or change addresses</string>
+    <string name="per_metodos_pago">Payment methods</string>
+    <string name="per_metodos_pago_sub">Cash, card terminal or bank transfer</string>
+    <string name="per_notificaciones">Notifications</string>
+    <string name="per_notificaciones_sub">%1$d unread · order updates</string>
+    <string name="per_sincronizar">Sync now</string>
+    <string name="per_sincronizar_online">Fetch orders and updates from the server</string>
+    <string name="per_sincronizar_offline">Offline: saved data is used</string>
+    <string name="per_modo_admin">Administrator mode</string>
+    <string name="per_modo_admin_sub">Bakery panel</string>
+    <string name="per_ayuda">Help and support</string>
+    <string name="per_ayuda_sub">Frequently asked questions and contact</string>
+    <string name="per_iniciar_sesion">Sign in</string>
+    <string name="per_cerrar_sesion">Sign out</string>
+    <string name="per_version">Acambapan · version 1.0 · Room + Retrofit</string>
+
+    <!-- Delivery addresses -->
+    <string name="dir_titulo">Addresses</string>
+    <string name="dir_sin_sesion_guardar">Sign in to save your addresses.</string>
+    <string name="dir_agregar">Add address</string>
+    <string name="dir_mis_direcciones">My addresses</string>
+    <string name="dir_sin_sesion_ver">Sign in to see your addresses.</string>
+    <string name="dir_vacio">You have no saved addresses yet. Add the first one to speed up your orders.</string>
+    <string name="dir_eliminar_titulo">Delete address</string>
+    <string name="dir_confirmar_borrado">Delete \"%1$s\"? This action cannot be undone.</string>
+    <string name="dir_eliminar">Delete</string>
+    <string name="dir_cancelar">Cancel</string>
+    <string name="dir_predeterminada">Default</string>
+    <string name="dir_editar">Edit</string>
+    <string name="dir_editar_titulo">Edit address</string>
+    <string name="dir_alias_etiqueta">Alias (Home, Work…)</string>
+    <string name="dir_calle_etiqueta">Street, number and neighborhood</string>
+    <string name="dir_referencias_etiqueta">Directions for the driver</string>
+    <string name="dir_usar_predeterminada">Use as default</string>
+    <string name="dir_error_campos">Enter an alias and the address.</string>
+    <string name="dir_guardar">Save</string>
+
+    <!-- Payment methods -->
+    <string name="pago_titulo">Payment methods</string>
+    <string name="pago_intro">Choose how you want to pay for your orders. The app does not store card numbers: payment is made on delivery or by bank transfer.</string>
+    <string name="pago_sin_sesion">Sign in to save your preferred payment method.</string>
+    <string name="pago_formas">Payment options</string>
+    <string name="pago_efectivo_detalle">You pay in cash when you receive or pick up your order.</string>
+    <string name="pago_tarjeta_detalle">The driver brings a card terminal; you can also pay by card at pickup.</string>
+    <string name="pago_transferencia_detalle">We share the CLABE when you confirm; send your receipt by WhatsApp.</string>
+
+    <!-- Notifications -->
+    <string name="not_titulo">Notifications</string>
+    <string name="not_sin_sesion">Sign in to see your updates.</string>
+    <string name="not_tus_avisos">Your updates</string>
+    <string name="not_sin_leer">%1$d unread</string>
+    <string name="not_marcar_todas">Mark all as read</string>
+    <string name="not_vacio">You have no updates yet. Changes to your orders will appear here.</string>
+
+    <!-- Restricted access -->
+    <string name="acc_titulo">This section is for the bakery staff.</string>
+    <string name="acc_mensaje">Sign in with an administrator account to manage orders and inventory.</string>
+    <string name="acc_iniciar_sesion_admin">Sign in as administrator</string>
+    <string name="acc_volver_catalogo">Back to catalog</string>
+</resources>

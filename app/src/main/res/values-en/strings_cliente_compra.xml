@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  English strings for the customer purchase flow.
+  The Spanish original lives in res/values/strings_cliente_compra.xml.
+  Key names and counts must match the Spanish file exactly:
+    cat_ -> CatalogoScreen
+    det_ -> DetalleProductoScreen
+    car_ -> CarritoScreen
+    seg_ -> SeguimientoScreen
+-->
+<resources>
+    <!-- CatalogoScreen -->
+    <string name="cat_buscar_etiqueta">Search bread, cake or drinks</string>
+    <string name="cat_todos">All</string>
+    <string name="cat_titulo_catalogo">Our catalog</string>
+    <string name="cat_articulos">%1$d items</string>
+    <string name="cat_sin_resultados">No products match your search.</string>
+    <string name="cat_sin_catalogo">There is no saved catalog yet. Connect to the internet and tap ⟳.</string>
+    <string name="cat_envio_gratis">Free delivery</string>
+    <string name="cat_envio_gratis_detalle">On orders over $250 within Acámbaro</string>
+
+    <!-- DetalleProductoScreen -->
+    <string name="det_titulo">Details</string>
+    <string name="det_cargando">Loading product…</string>
+    <string name="det_no_guardado">This product is not saved on this phone.</string>
+    <string name="det_volver_catalogo">Back to catalog</string>
+    <string name="det_cantidad">Quantity</string>
+    <string name="det_disponibilidad">Availability</string>
+    <string name="det_disponible_hoy">Available today</string>
+    <string name="det_agotado">Sold out</string>
+    <string name="det_total">Total</string>
+    <string name="det_agregar_carrito">Add to cart</string>
+    <string name="det_seguir_comprando">Keep shopping</string>
+
+    <!-- CarritoScreen -->
+    <string name="car_titulo">Cart</string>
+    <string name="car_pedido_resumen">Your order (%1$d products · %2$d items)</string>
+    <string name="car_vacio">Your cart is empty. Add bread, pastries or drinks from the catalog.</string>
+    <string name="car_ir_catalogo">Go to catalog</string>
+    <string name="car_linea_cantidad_precio">%1$d x %2$s</string>
+    <string name="car_entrega">Delivery</string>
+    <string name="car_domicilio">Home delivery</string>
+    <string name="car_recoger">Pick up</string>
+    <string name="car_direccion_etiqueta">Delivery address</string>
+    <string name="car_pago">Payment</string>
+    <string name="car_resumen">Summary</string>
+    <string name="car_subtotal">Subtotal</string>
+    <string name="car_envio">Shipping</string>
+    <string name="car_gratis">Free</string>
+    <string name="car_total">Total</string>
+    <string name="car_guardando">Saving order…</string>
+    <string name="car_confirmar">Confirm order</string>
+    <string name="car_seguir_comprando">Keep shopping</string>
+
+    <!-- SeguimientoScreen -->
+    <string name="seg_titulo">Tracking</string>
+    <string name="seg_sin_pedidos">You have no orders yet.\nOnce you confirm the cart, its status will show here.</string>
+    <string name="seg_ir_catalogo">Go to catalog</string>
+    <string name="seg_pedido_folio">Order %1$s</string>
+    <string name="seg_entrega">Delivery</string>
+    <string name="seg_total">Total</string>
+    <string name="seg_productos">Products</string>
+    <string name="seg_pendiente_sync">This order is saved on the phone and has not been sent to the bakery yet. It will be sent once the connection returns.</string>
+    <string name="seg_enviando">Sending…</string>
+    <string name="seg_reintentar_envio">Retry sending</string>
+    <string name="seg_cancelado">This order was canceled.</string>
+    <string name="seg_llega_aprox">Arriving in about %1$s</string>
+    <string name="seg_estado_pedido">Order status</string>
+    <string name="seg_repartidor">Driver</string>
+    <string name="seg_sin_asignar">Not assigned yet</string>
+    <string name="seg_repartidor_pendiente">The bakery will assign someone when the order goes out.</string>
+    <string name="seg_volver_catalogo">Back to catalog</string>
+    <string name="seg_llamar_repartidor">Call the driver</string>
+</resources>

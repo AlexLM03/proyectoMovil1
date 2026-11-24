@@ -21,12 +21,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.devnoway.posproyect.R
 import com.devnoway.posproyect.data.modelo.enPesos
 import com.devnoway.posproyect.di.ContenedorApp
 import com.devnoway.posproyect.navigation.Rutas
@@ -62,7 +64,7 @@ fun DetalleProductoScreen(
     val producto = estado.producto
 
     MarcoCliente(
-        titulo = "Detalle",
+        titulo = stringResource(R.string.det_titulo),
         rutaActual = Rutas.CATALOGO,
         onNavegar = onNavegar,
         onAtras = onAtras,
@@ -81,16 +83,19 @@ fun DetalleProductoScreen(
                 Spacer(Modifier.height(48.dp))
                 Text(
                     text = if (estado.cargando) {
-                        "Cargando producto…"
+                        stringResource(R.string.det_cargando)
                     } else {
-                        "Este producto no está guardado en el teléfono."
+                        stringResource(R.string.det_no_guardado)
                     },
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
                 )
                 Spacer(Modifier.height(16.dp))
-                BotonSecundario(texto = "Volver al catálogo", onClick = onAtras)
+                BotonSecundario(
+                    texto = stringResource(R.string.det_volver_catalogo),
+                    onClick = onAtras
+                )
                 return@Column
             }
 
@@ -124,7 +129,7 @@ fun DetalleProductoScreen(
 
             Spacer(Modifier.height(8.dp))
             Text(
-                text = "Cantidad",
+                text = stringResource(R.string.det_cantidad),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -151,11 +156,15 @@ fun DetalleProductoScreen(
             ) {
                 Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
                     FilaDato(
-                        etiqueta = "Disponibilidad",
-                        valor = if (producto.disponible) "Disponible hoy" else "Agotado"
+                        etiqueta = stringResource(R.string.det_disponibilidad),
+                        valor = if (producto.disponible) {
+                            stringResource(R.string.det_disponible_hoy)
+                        } else {
+                            stringResource(R.string.det_agotado)
+                        }
                     )
                     FilaDato(
-                        etiqueta = "Total",
+                        etiqueta = stringResource(R.string.det_total),
                         valor = (producto.precio * cantidad).enPesos()
                     )
                 }
@@ -163,14 +172,17 @@ fun DetalleProductoScreen(
 
             Spacer(Modifier.height(4.dp))
             BotonPrincipal(
-                texto = "Agregar al carrito",
+                texto = stringResource(R.string.det_agregar_carrito),
                 onClick = {
                     viewModel.agregarAlCarrito(cantidad)
                     onAgregarAlCarrito()
                 },
                 habilitado = producto.disponible
             )
-            BotonSecundario(texto = "Seguir comprando", onClick = onAtras)
+            BotonSecundario(
+                texto = stringResource(R.string.det_seguir_comprando),
+                onClick = onAtras
+            )
         }
     }
 }

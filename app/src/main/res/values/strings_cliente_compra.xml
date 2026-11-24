@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Textos de ESPAÑOL del flujo de compra del cliente.
+  Este archivo cubre cuatro pantallas y cada clave lleva el prefijo de la suya:
+    cat_ -> CatalogoScreen
+    det_ -> DetalleProductoScreen
+    car_ -> CarritoScreen
+    seg_ -> SeguimientoScreen
+  La traducción al inglés vive en res/values-en/strings_cliente_compra.xml y
+  debe tener exactamente las mismas claves.
+-->
+<resources>
+    <!-- CatalogoScreen -->
+    <string name="cat_buscar_etiqueta">Buscar pan, pastel o bebida</string>
+    <string name="cat_todos">Todos</string>
+    <string name="cat_titulo_catalogo">Nuestro catálogo</string>
+    <string name="cat_articulos">%1$d artículos</string>
+    <string name="cat_sin_resultados">No hay productos que coincidan con tu búsqueda.</string>
+    <string name="cat_sin_catalogo">Todavía no hay catálogo guardado. Conéctate a internet y toca ⟳.</string>
+    <string name="cat_envio_gratis">Envío gratis</string>
+    <string name="cat_envio_gratis_detalle">En pedidos mayores a $250 dentro de Acámbaro</string>
+
+    <!-- DetalleProductoScreen -->
+    <string name="det_titulo">Detalle</string>
+    <string name="det_cargando">Cargando producto…</string>
+    <string name="det_no_guardado">Este producto no está guardado en el teléfono.</string>
+    <string name="det_volver_catalogo">Volver al catálogo</string>
+    <string name="det_cantidad">Cantidad</string>
+    <string name="det_disponibilidad">Disponibilidad</string>
+    <string name="det_disponible_hoy">Disponible hoy</string>
+    <string name="det_agotado">Agotado</string>
+    <string name="det_total">Total</string>
+    <string name="det_agregar_carrito">Agregar al carrito</string>
+    <string name="det_seguir_comprando">Seguir comprando</string>
+
+    <!-- CarritoScreen -->
+    <string name="car_titulo">Carrito</string>
+    <string name="car_pedido_resumen">Tu pedido (%1$d productos · %2$d piezas)</string>
+    <string name="car_vacio">Tu carrito está vacío. Agrega pan, pasteles o bebidas del catálogo.</string>
+    <string name="car_ir_catalogo">Ir al catálogo</string>
+    <string name="car_linea_cantidad_precio">%1$d x %2$s</string>
+    <string name="car_entrega">Entrega</string>
+    <string name="car_domicilio">A domicilio</string>
+    <string name="car_recoger">Para recoger</string>
+    <string name="car_direccion_etiqueta">Dirección de entrega</string>
+    <string name="car_pago">Pago</string>
+    <string name="car_resumen">Resumen</string>
+    <string name="car_subtotal">Subtotal</string>
+    <string name="car_envio">Envío</string>
+    <string name="car_gratis">Gratis</string>
+    <string name="car_total">Total</string>
+    <string name="car_guardando">Guardando pedido…</string>
+    <string name="car_confirmar">Confirmar pedido</string>
+    <string name="car_seguir_comprando">Seguir comprando</string>
+
+    <!-- SeguimientoScreen -->
+    <string name="seg_titulo">Seguimiento</string>
+    <string name="seg_sin_pedidos">Todavía no tienes pedidos.\nCuando confirmes el carrito verás aquí su estado.</string>
+    <string name="seg_ir_catalogo">Ir al catálogo</string>
+    <string name="seg_pedido_folio">Pedido %1$s</string>
+    <string name="seg_entrega">Entrega</string>
+    <string name="seg_total">Total</string>
+    <string name="seg_productos">Productos</string>
+    <string name="seg_pendiente_sync">Este pedido está guardado en el teléfono y todavía no se envió a la panadería. Se enviará al recuperar la conexión.</string>
+    <string name="seg_enviando">Enviando…</string>
+    <string name="seg_reintentar_envio">Reintentar envío</string>
+    <string name="seg_cancelado">Este pedido fue cancelado.</string>
+    <string name="seg_llega_aprox">Llega en aproximadamente %1$s</string>
+    <string name="seg_estado_pedido">Estado del pedido</string>
+    <string name="seg_repartidor">Repartidor</string>
+    <string name="seg_sin_asignar">Aún sin asignar</string>
+    <string name="seg_repartidor_pendiente">La panadería asignará a alguien al salir el pedido.</string>
+    <string name="seg_volver_catalogo">Volver al catálogo</string>
+    <string name="seg_llamar_repartidor">Llamar al repartidor</string>
+</resources>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Textos de las pantallas de cuenta del cliente en ESPAÑOL (idioma predeterminado).
+  Perfil, direcciones, métodos de pago, notificaciones y acceso restringido.
+  Las traducciones al inglés viven en res/values-en/strings_cuenta.xml y deben
+  tener exactamente las mismas claves.
+-->
+<resources>
+    <!-- Perfil -->
+    <string name="per_titulo">Mi perfil</string>
+    <string name="per_invitado">Invitado</string>
+    <string name="per_sin_sesion">Sin sesión: navegando como invitado</string>
+    <string name="per_rol_admin">Administrador de la panadería</string>
+    <string name="per_rol_cliente">Cliente registrado</string>
+    <string name="per_mis_datos">Mis datos</string>
+    <string name="per_correo">Correo</string>
+    <string name="per_telefono">Teléfono</string>
+    <string name="per_direccion">Dirección</string>
+    <string name="per_ajustes">Ajustes</string>
+    <string name="per_mis_pedidos">Mis pedidos</string>
+    <string name="per_mis_pedidos_sub">%1$d pedido(s) guardados en este teléfono</string>
+    <string name="per_direcciones">Direcciones de entrega</string>
+    <string name="per_direcciones_sub">Agregar o cambiar direcciones</string>
+    <string name="per_metodos_pago">Métodos de pago</string>
+    <string name="per_metodos_pago_sub">Efectivo, terminal o transferencia</string>
+    <string name="per_notificaciones">Notificaciones</string>
+    <string name="per_notificaciones_sub">%1$d sin leer · avisos del pedido</string>
+    <string name="per_sincronizar">Sincronizar ahora</string>
+    <string name="per_sincronizar_online">Traer pedidos y avisos del servidor</string>
+    <string name="per_sincronizar_offline">Sin conexión: se usan los datos guardados</string>
+    <string name="per_modo_admin">Modo administrador</string>
+    <string name="per_modo_admin_sub">Panel de la panadería</string>
+    <string name="per_ayuda">Ayuda y soporte</string>
+    <string name="per_ayuda_sub">Preguntas frecuentes y contacto</string>
+    <string name="per_iniciar_sesion">Iniciar sesión</string>
+    <string name="per_cerrar_sesion">Cerrar sesión</string>
+    <string name="per_version">Acambapan · versión 1.0 · Room + Retrofit</string>
+
+    <!-- Direcciones de entrega -->
+    <string name="dir_titulo">Direcciones</string>
+    <string name="dir_sin_sesion_guardar">Inicia sesión para guardar tus direcciones.</string>
+    <string name="dir_agregar">Agregar dirección</string>
+    <string name="dir_mis_direcciones">Mis direcciones</string>
+    <string name="dir_sin_sesion_ver">Inicia sesión para ver tus direcciones.</string>
+    <string name="dir_vacio">Todavía no tienes direcciones guardadas. Agrega la primera para agilizar tus pedidos.</string>
+    <string name="dir_eliminar_titulo">Eliminar dirección</string>
+    <string name="dir_confirmar_borrado">¿Eliminar \"%1$s\"? Esta acción no se puede deshacer.</string>
+    <string name="dir_eliminar">Eliminar</string>
+    <string name="dir_cancelar">Cancelar</string>
+    <string name="dir_predeterminada">Predeterminada</string>
+    <string name="dir_editar">Editar</string>
+    <string name="dir_editar_titulo">Editar dirección</string>
+    <string name="dir_alias_etiqueta">Alias (Casa, Trabajo…)</string>
+    <string name="dir_calle_etiqueta">Calle, número y colonia</string>
+    <string name="dir_referencias_etiqueta">Referencias para el repartidor</string>
+    <string name="dir_usar_predeterminada">Usar como predeterminada</string>
+    <string name="dir_error_campos">Escribe un alias y la dirección.</string>
+    <string name="dir_guardar">Guardar</string>
+
+    <!-- Métodos de pago -->
+    <string name="pago_titulo">Métodos de pago</string>
+    <string name="pago_intro">Elige cómo quieres pagar tus pedidos. La app no guarda números de tarjeta: el cobro se hace al recibir o por transferencia.</string>
+    <string name="pago_sin_sesion">Inicia sesión para guardar tu método de pago preferido.</string>
+    <string name="pago_formas">Formas de pago</string>
+    <string name="pago_efectivo_detalle">Pagas en efectivo cuando recibes o recoges tu pedido.</string>
+    <string name="pago_tarjeta_detalle">El repartidor lleva terminal; también puedes pagar con tarjeta al recoger.</string>
+    <string name="pago_transferencia_detalle">Te compartimos la CLABE al confirmar; manda tu comprobante por WhatsApp.</string>
+
+    <!-- Notificaciones -->
+    <string name="not_titulo">Notificaciones</string>
+    <string name="not_sin_sesion">Inicia sesión para ver tus avisos.</string>
+    <string name="not_tus_avisos">Tus avisos</string>
+    <string name="not_sin_leer">%1$d sin leer</string>
+    <string name="not_marcar_todas">Marcar todas como leídas</string>
+    <string name="not_vacio">No tienes avisos todavía. Aquí verás los cambios de tus pedidos.</string>
+
+    <!-- Acceso restringido -->
+    <string name="acc_titulo">Esta sección es para el personal de la panadería.</string>
+    <string name="acc_mensaje">Inicia sesión con una cuenta de administrador para gestionar pedidos e inventario.</string>
+    <string name="acc_iniciar_sesion_admin">Iniciar sesión como administrador</string>
+    <string name="acc_volver_catalogo">Volver al catálogo</string>
+</resources>

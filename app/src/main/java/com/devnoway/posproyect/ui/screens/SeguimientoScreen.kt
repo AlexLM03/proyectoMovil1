@@ -27,12 +27,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.devnoway.posproyect.R
 import com.devnoway.posproyect.data.modelo.EstadoPedido
 import com.devnoway.posproyect.data.modelo.Pedido
 import com.devnoway.posproyect.data.modelo.enPesos
@@ -47,6 +49,7 @@ import com.devnoway.posproyect.ui.components.FilaDato
 import com.devnoway.posproyect.ui.components.IndicadorConexion
 import com.devnoway.posproyect.ui.components.MarcoCliente
 import com.devnoway.posproyect.ui.components.TituloSeccion
+import com.devnoway.posproyect.ui.etiquetaRes
 import com.devnoway.posproyect.ui.theme.VerdeExito
 import com.devnoway.posproyect.ui.viewmodel.SeguimientoViewModel
 
@@ -69,7 +72,7 @@ fun SeguimientoScreen(
     val pedido = estado.pedido
 
     MarcoCliente(
-        titulo = "Seguimiento",
+        titulo = stringResource(R.string.seg_titulo),
         rutaActual = Rutas.SEGUIMIENTO,
         onNavegar = onNavegar,
         modifier = modifier,
@@ -94,13 +97,16 @@ fun SeguimientoScreen(
             ) {
                 Spacer(Modifier.height(48.dp))
                 Text(
-                    text = "Todavía no tienes pedidos.\nCuando confirmes el carrito verás aquí su estado.",
+                    text = stringResource(R.string.seg_sin_pedidos),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
                 )
                 Spacer(Modifier.height(18.dp))
-                BotonPrincipal(texto = "Ir al catálogo", onClick = onVolverAlCatalogo)
+                BotonPrincipal(
+                    texto = stringResource(R.string.seg_ir_catalogo),
+                    onClick = onVolverAlCatalogo
+                )
             }
             return@MarcoCliente
         }
@@ -119,7 +125,7 @@ fun SeguimientoScreen(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = "Pedido ${pedido.folio}",
+                                text = stringResource(R.string.seg_pedido_folio, pedido.folio),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold
                             )
@@ -130,7 +136,7 @@ fun SeguimientoScreen(
                             )
                         }
                         EtiquetaEstado(
-                            texto = pedido.estado.etiqueta,
+                            texto = stringResource(pedido.estado.etiquetaRes),
                             color = if (pedido.estado == EstadoPedido.ENTREGADO) {
                                 VerdeExito
                             } else {
@@ -139,11 +145,17 @@ fun SeguimientoScreen(
                         )
                     }
                     Spacer(Modifier.height(12.dp))
-                    FilaDato(etiqueta = "Entrega", valor = pedido.entrega)
-                    FilaDato(etiqueta = "Total", valor = pedido.total.enPesos())
+                    FilaDato(
+                        etiqueta = stringResource(R.string.seg_entrega),
+                        valor = pedido.entrega
+                    )
+                    FilaDato(
+                        etiqueta = stringResource(R.string.seg_total),
+                        valor = pedido.total.enPesos()
+                    )
                     if (pedido.lineas.isNotEmpty()) {
                         FilaDato(
-                            etiqueta = "Productos",
+                            etiqueta = stringResource(R.string.seg_productos),
                             valor = pedido.lineas.joinToString { "${it.cantidad}× ${it.nombre}" }
                         )
                     }
@@ -153,14 +165,18 @@ fun SeguimientoScreen(
             if (pedido.pendienteSincronizar) {
                 Spacer(Modifier.height(12.dp))
                 BandaMensaje(
-                    mensaje = "Este pedido está guardado en el teléfono y todavía no se envió a la panadería. Se enviará al recuperar la conexión."
+                    mensaje = stringResource(R.string.seg_pendiente_sync)
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = androidx.compose.foundation.layout.Arrangement.End
                 ) {
                     BotonTexto(
-                        texto = if (estado.actualizando) "Enviando…" else "Reintentar envío",
+                        texto = if (estado.actualizando) {
+                            stringResource(R.string.seg_enviando)
+                        } else {
+                            stringResource(R.string.seg_reintentar_envio)
+                        },
                         onClick = viewModel::refrescar
                     )
                 }
@@ -177,11 +193,14 @@ fun SeguimientoScreen(
 
             if (pedido.estado == EstadoPedido.CANCELADO) {
                 Spacer(Modifier.height(16.dp))
-                BandaMensaje(mensaje = "Este pedido fue cancelado.", esError = true)
+                BandaMensaje(
+                    mensaje = stringResource(R.string.seg_cancelado),
+                    esError = true
+                )
             } else {
                 Spacer(Modifier.height(16.dp))
                 Text(
-                    text = "Llega en aproximadamente ${pedido.tiempoEstimado}",
+                    text = stringResource(R.string.seg_llega_aprox, pedido.tiempoEstimado),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -196,7 +215,7 @@ fun SeguimientoScreen(
                 )
 
                 Spacer(Modifier.height(20.dp))
-                TituloSeccion("Estado del pedido")
+                TituloSeccion(stringResource(R.string.seg_estado_pedido))
                 Spacer(Modifier.height(12.dp))
 
                 EstadoPedido.flujo.forEachIndexed { indice, paso ->
@@ -225,7 +244,7 @@ fun SeguimientoScreen(
                         }
                         Spacer(Modifier.width(12.dp))
                         Text(
-                            text = paso.etiqueta,
+                            text = stringResource(paso.etiquetaRes),
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = if (completado) FontWeight.SemiBold else FontWeight.Normal,
                             color = if (completado) {
@@ -247,7 +266,7 @@ fun SeguimientoScreen(
                 }
 
                 Spacer(Modifier.height(20.dp))
-                TituloSeccion("Repartidor")
+                TituloSeccion(stringResource(R.string.seg_repartidor))
                 Spacer(Modifier.height(8.dp))
                 Card(
                     colors = CardDefaults.cardColors(
@@ -257,12 +276,13 @@ fun SeguimientoScreen(
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = pedido.repartidor ?: "Aún sin asignar",
+                            text = pedido.repartidor ?: stringResource(R.string.seg_sin_asignar),
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.SemiBold
                         )
                         Text(
-                            text = pedido.telefonoRepartidor ?: "La panadería asignará a alguien al salir el pedido.",
+                            text = pedido.telefonoRepartidor
+                                ?: stringResource(R.string.seg_repartidor_pendiente),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -279,7 +299,10 @@ fun SeguimientoScreen(
             }
 
             Spacer(Modifier.height(8.dp))
-            BotonPrincipal(texto = "Volver al catálogo", onClick = onVolverAlCatalogo)
+            BotonPrincipal(
+                texto = stringResource(R.string.seg_volver_catalogo),
+                onClick = onVolverAlCatalogo
+            )
             Spacer(Modifier.height(8.dp))
         }
     }
@@ -289,7 +312,7 @@ fun SeguimientoScreen(
 private fun LlamarRepartidor(pedido: Pedido, onLlamar: (String) -> Unit) {
     val telefono = pedido.telefonoRepartidor
     BotonSecundario(
-        texto = "Llamar al repartidor",
+        texto = stringResource(R.string.seg_llamar_repartidor),
         onClick = { telefono?.let(onLlamar) },
         habilitado = !telefono.isNullOrBlank()
     )
