@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  English strings. The Spanish original lives in res/values/strings.xml.
+  Grouped by screen prefix so each language file stays easy to audit.
+-->
+<resources>
+    <string name="app_name">Acambapan</string>
+    <string name="app_slogan">Bakery and pastry shop from Acambay</string>
+
+    <!-- Brand -->
+    <string name="logo_descripcion">Acambapan logo</string>
+
+    <!-- Bottom / side navigation -->
+    <string name="nav_catalogo">Catalog</string>
+    <string name="nav_carrito">Cart</string>
+    <string name="nav_pedido">Order</string>
+    <string name="nav_perfil">Profile</string>
+    <string name="nav_panel">Panel</string>
+    <string name="nav_dash">Dashboard</string>
+    <string name="nav_pedidos">Orders</string>
+    <string name="nav_inventario">Inventory</string>
+
+    <!-- Connection status -->
+    <string name="conn_sincronizando">Syncing…</string>
+    <string name="conn_en_linea">Online</string>
+    <string name="conn_sin_conexion">Offline</string>
+
+    <!-- Actions and single words -->
+    <string name="accion_ok">OK</string>
+    <string name="accion_entendido">Got it</string>
+    <string name="accion_cancelar">Cancel</string>
+    <string name="accion_guardar">Save</string>
+    <string name="accion_editar">Edit</string>
+    <string name="accion_eliminar">Delete</string>
+    <string name="accion_reintentar">Retry</string>
+    <string name="accion_cerrar">Close</string>
+
+    <!-- Order states (used by the customer and admin flows) -->
+    <string name="estado_recibido">Received</string>
+    <string name="estado_en_preparacion">Being prepared</string>
+    <string name="estado_en_camino">On the way</string>
+    <string name="estado_entregado">Delivered</string>
+    <string name="estado_cancelado">Canceled</string>
+
+    <!-- Payment methods -->
+    <string name="metodo_efectivo">Cash</string>
+    <string name="metodo_tarjeta">Card</string>
+    <string name="metodo_transferencia">Bank transfer</string>
+    <string name="metodo_efectivo_desc">You pay when your order arrives</string>
+    <string name="metodo_tarjeta_desc">The driver brings a card terminal</string>
+    <string name="metodo_transferencia_desc">SPEI; the bakery shares the details</string>
+</resources>

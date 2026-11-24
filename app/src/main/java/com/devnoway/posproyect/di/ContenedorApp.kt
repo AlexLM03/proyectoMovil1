@@ -24,6 +24,9 @@ import com.devnoway.posproyect.data.sesion.AlmacenSesion
  */
 class ContenedorApp(contexto: Context) {
 
+    /** Contexto de aplicación: lo usan los ViewModel para resolver textos. */
+    val contexto: Context = contexto.applicationContext
+
     private val baseDeDatos: AcambapanDatabase = AcambapanDatabase.obtener(contexto)
 
     val almacenSesion: AlmacenSesion = AlmacenSesion(contexto)

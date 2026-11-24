@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Idiomas que la app declara soportar. Con esto, Android 13+ muestra Acambapan
+  en Ajustes > Aplicaciones > Acambapan > Idioma, y el sistema entrega los
+  recursos de res/values-<idioma>/ según la preferencia del usuario.
+-->
+<locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <locale android:name="es" />
+    <locale android:name="en" />
+</locale-config>
