@@ -15,11 +15,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.devnoway.posproyect.R
 import com.devnoway.posproyect.data.modelo.enPesos
 import com.devnoway.posproyect.di.ContenedorApp
 import com.devnoway.posproyect.navigation.Rutas
@@ -52,9 +54,15 @@ fun AdminPanelScreen(
 ) {
     val estado by viewModel.estado.collectAsStateWithLifecycle()
     val sesion by viewModel.sesion.collectAsStateWithLifecycle()
+    val textoSinSesion = stringResource(R.string.adp_sin_sesion)
+    val textoSesion = stringResource(
+        R.string.adp_sesion,
+        sesion?.correo ?: textoSinSesion,
+        sesion?.rol ?: "-"
+    )
 
     MarcoAdmin(
-        titulo = "Panel principal",
+        titulo = stringResource(R.string.adp_titulo),
         rutaActual = Rutas.ADMIN_PANEL,
         onNavegar = onNavegar,
         onAtras = onVolverATienda,
@@ -78,18 +86,18 @@ fun AdminPanelScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = "Panadería Acambapan",
+                text = stringResource(R.string.adp_negocio),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
             )
             Text(
-                text = "Sucursal Acámbaro · datos guardados en el teléfono",
+                text = stringResource(R.string.adp_sucursal),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                text = "Sesión: ${sesion?.correo ?: "sin sesión"} · ${sesion?.rol ?: "-"}",
+                text = textoSesion,
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.secondary,
                 fontWeight = FontWeight.SemiBold
@@ -106,25 +114,25 @@ fun AdminPanelScreen(
             Spacer(Modifier.height(4.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 TarjetaIndicador(
-                    titulo = "Pedidos de hoy",
+                    titulo = stringResource(R.string.adp_pedidos_hoy),
                     valor = estado.pedidosHoy.toString(),
                     modifier = Modifier.weight(1f)
                 )
                 TarjetaIndicador(
-                    titulo = "Ventas de hoy",
+                    titulo = stringResource(R.string.adp_ventas_hoy),
                     valor = estado.ventasHoy.enPesos(),
                     modifier = Modifier.weight(1f)
                 )
             }
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 TarjetaIndicador(
-                    titulo = "Por enviar",
+                    titulo = stringResource(R.string.adp_por_enviar),
                     valor = estado.pedidosPendientes.toString(),
                     modifier = Modifier.weight(1f),
                     colorValor = MaterialTheme.colorScheme.secondary
                 )
                 TarjetaIndicador(
-                    titulo = "Insumos bajos",
+                    titulo = stringResource(R.string.adp_insumos_bajos),
                     valor = estado.insumosBajos.toString(),
                     modifier = Modifier.weight(1f),
                     colorValor = RojoAlerta
@@ -132,38 +140,38 @@ fun AdminPanelScreen(
             }
 
             Spacer(Modifier.height(4.dp))
-            TituloSeccion("Accesos rápidos")
+            TituloSeccion(stringResource(R.string.adp_accesos_rapidos))
             FilaNavegacion(
                 emoji = "\uD83D\uDCCA",
-                titulo = "Dash administrativo",
-                subtitulo = "Indicadores y ventas del día",
+                titulo = stringResource(R.string.adp_dash_titulo),
+                subtitulo = stringResource(R.string.adp_dash_subtitulo),
                 onClick = { onNavegar(Rutas.ADMIN_DASH) }
             )
             FilaNavegacion(
                 emoji = "\uD83D\uDCCB",
-                titulo = "Gestión de pedidos",
-                subtitulo = "Pedidos pendientes, en camino y entregados",
+                titulo = stringResource(R.string.adp_pedidos_titulo),
+                subtitulo = stringResource(R.string.adp_pedidos_subtitulo),
                 onClick = { onNavegar(Rutas.ADMIN_PEDIDOS) }
             )
             FilaNavegacion(
                 emoji = "\uD83D\uDCE6",
-                titulo = "Inventario",
-                subtitulo = "Insumos y existencias de la panadería",
+                titulo = stringResource(R.string.adp_inventario_titulo),
+                subtitulo = stringResource(R.string.adp_inventario_subtitulo),
                 onClick = { onNavegar(Rutas.ADMIN_INVENTARIO) }
             )
 
             Spacer(Modifier.height(4.dp))
-            TituloSeccion("Tienda")
+            TituloSeccion(stringResource(R.string.adp_tienda))
             FilaNavegacion(
                 emoji = "\uD83D\uDED2",
-                titulo = "Ver catálogo como cliente",
-                subtitulo = "Regresa a la tienda de la app",
+                titulo = stringResource(R.string.adp_catalogo_titulo),
+                subtitulo = stringResource(R.string.adp_catalogo_subtitulo),
                 onClick = onVolverATienda
             )
 
             Spacer(Modifier.height(8.dp))
             BotonSecundario(
-                texto = "Cerrar sesión de administrador",
+                texto = stringResource(R.string.adp_cerrar_sesion),
                 onClick = {
                     viewModel.limpiarMensaje()
                     onCerrarSesion()

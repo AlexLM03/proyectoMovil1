@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Textos de las pantallas de administración en ESPAÑOL (idioma predeterminado).
+  Las traducciones al inglés viven en res/values-en/strings_admin.xml.
+  Prefijos: adp_ = AdminPanelScreen, adc_ = AdminDashboardScreen,
+            gpe_ = GestionPedidosScreen, inv_ = InventarioScreen.
+-->
+<resources>
+
+    <!-- AdminPanelScreen (adp_) -->
+    <string name="adp_titulo">Panel principal</string>
+    <string name="adp_negocio">Panadería Acambapan</string>
+    <string name="adp_sucursal">Sucursal Acámbaro · datos guardados en el teléfono</string>
+    <string name="adp_sesion">Sesión: %1$s · %2$s</string>
+    <string name="adp_sin_sesion">sin sesión</string>
+    <string name="adp_pedidos_hoy">Pedidos de hoy</string>
+    <string name="adp_ventas_hoy">Ventas de hoy</string>
+    <string name="adp_por_enviar">Por enviar</string>
+    <string name="adp_insumos_bajos">Insumos bajos</string>
+    <string name="adp_accesos_rapidos">Accesos rápidos</string>
+    <string name="adp_dash_titulo">Dash administrativo</string>
+    <string name="adp_dash_subtitulo">Indicadores y ventas del día</string>
+    <string name="adp_pedidos_titulo">Gestión de pedidos</string>
+    <string name="adp_pedidos_subtitulo">Pedidos pendientes, en camino y entregados</string>
+    <string name="adp_inventario_titulo">Inventario</string>
+    <string name="adp_inventario_subtitulo">Insumos y existencias de la panadería</string>
+    <string name="adp_tienda">Tienda</string>
+    <string name="adp_catalogo_titulo">Ver catálogo como cliente</string>
+    <string name="adp_catalogo_subtitulo">Regresa a la tienda de la app</string>
+    <string name="adp_cerrar_sesion">Cerrar sesión de administrador</string>
+
+    <!-- AdminDashboardScreen (adc_) -->
+    <string name="adc_titulo">Dash administrativo</string>
+    <string name="adc_ventas_dia">Ventas del día</string>
+    <string name="adc_pedidos">Pedidos</string>
+    <string name="adc_ticket_promedio">Ticket promedio</string>
+    <string name="adc_insumos_bajos">Insumos bajos</string>
+    <string name="adc_meta_titulo">Meta del día</string>
+    <string name="adc_meta_valores">%1$s de %2$s</string>
+    <string name="adc_meta_alcanzado">%1$d%% alcanzado</string>
+    <string name="adc_recientes">Pedidos recientes</string>
+    <string name="adc_sin_datos">Todavía no hay pedidos guardados. Toca ⟳ para traerlos del servidor.</string>
+    <string name="adc_ver_todos">Ver todos los pedidos</string>
+    <string name="adc_revisar_inventario">Revisar inventario</string>
+
+    <!-- GestionPedidosScreen (gpe_) -->
+    <string name="gpe_titulo">Gestión de pedidos</string>
+    <string name="gpe_filtro_todos">Todos</string>
+    <string name="gpe_conteo">%1$d pedidos</string>
+    <string name="gpe_sin_pedidos">No hay pedidos con este filtro.</string>
+    <string name="gpe_pendiente_envio">Pendiente de envío (creado sin conexión)</string>
+    <string name="gpe_ver_seguimiento">Ver seguimiento</string>
+    <string name="gpe_marcar">Marcar %1$s</string>
+    <string name="gpe_cancelar">Cancelar</string>
+
+    <!-- InventarioScreen (inv_) -->
+    <string name="inv_titulo">Inventario</string>
+    <string name="inv_insumos_registrados">Insumos registrados</string>
+    <string name="inv_bajos_stock">Bajos de stock</string>
+    <string name="inv_agregar">Agregar insumo</string>
+    <string name="inv_editar">Editar insumo</string>
+    <string name="inv_existencias">Existencias</string>
+    <string name="inv_sin_datos">No hay insumos guardados. Toca ⟳ para traerlos del servidor.</string>
+    <string name="inv_stock_minimo">%1$s %2$s · mínimo %3$s</string>
+    <string name="inv_estado_bajo">Bajo</string>
+    <string name="inv_estado_suficiente">Suficiente</string>
+    <string name="inv_nombre">Nombre</string>
+    <string name="inv_minimo">Mínimo</string>
+    <string name="inv_unidad">Unidad (kg, piezas, litros)</string>
+    <string name="inv_error_campos">Escribe el nombre, la unidad y cantidades válidas.</string>
+    <string name="inv_guardar">Guardar</string>
+    <string name="inv_eliminar">Eliminar</string>
+    <string name="inv_cancelar">Cancelar</string>
+
+</resources>

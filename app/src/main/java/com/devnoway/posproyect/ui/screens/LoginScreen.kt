@@ -17,11 +17,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.devnoway.posproyect.R
 import com.devnoway.posproyect.data.modelo.Usuario
 import com.devnoway.posproyect.di.ContenedorApp
 import com.devnoway.posproyect.ui.components.BandaMensaje
@@ -90,14 +92,14 @@ fun LoginScreen(
             CampoTexto(
                 valor = estado.correo,
                 onValorCambio = viewModel::cambiarCorreo,
-                etiqueta = "Correo o teléfono",
+                etiqueta = stringResource(R.string.log_etiqueta_correo),
                 tipoTeclado = KeyboardType.Email
             )
             Spacer(Modifier.height(12.dp))
             CampoTexto(
                 valor = estado.contrasena,
                 onValorCambio = viewModel::cambiarContrasena,
-                etiqueta = "Contraseña",
+                etiqueta = stringResource(R.string.log_etiqueta_contrasena),
                 esContrasena = true
             )
 
@@ -112,30 +114,45 @@ fun LoginScreen(
 
             Spacer(Modifier.height(20.dp))
             BotonPrincipal(
-                texto = if (estado.cargando) "Entrando…" else "Iniciar sesión",
+                texto = if (estado.cargando) {
+                    stringResource(R.string.log_boton_entrando)
+                } else {
+                    stringResource(R.string.log_boton_iniciar_sesion)
+                },
                 onClick = { viewModel.entrar() },
                 habilitado = !estado.cargando
             )
             Spacer(Modifier.height(10.dp))
-            BotonSecundario(texto = "Crear cuenta", onClick = onCrearCuenta)
+            BotonSecundario(
+                texto = stringResource(R.string.log_boton_crear_cuenta),
+                onClick = onCrearCuenta
+            )
             Spacer(Modifier.height(4.dp))
-            BotonTexto(texto = "Entrar como invitado", onClick = onInvitado)
+            BotonTexto(
+                texto = stringResource(R.string.log_boton_invitado),
+                onClick = onInvitado
+            )
 
             Spacer(Modifier.height(28.dp))
             Text(
-                text = "Panel de la panadería",
+                text = stringResource(R.string.log_panel_titulo),
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
             )
             BotonTexto(
-                texto = "Acceso administrador",
+                texto = stringResource(R.string.log_boton_admin),
                 onClick = { viewModel.entrar(rolRequerido = "ADMIN") }
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                text = "Demo · admin@pantradicion.com / 123456\n" +
-                    "Cliente · s23120227@alumnos.itsur.edu.mx / 123456",
+                text = stringResource(
+                    R.string.log_demo_credenciales,
+                    "admin@pantradicion.com",
+                    "123456",
+                    "s23120227@alumnos.itsur.edu.mx",
+                    "123456"
+                ),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center

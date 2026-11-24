@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Textos de las pantallas de acceso y ayuda en ESPAÑOL.
+  La traducción al inglés vive en res/values-en/strings_acceso.xml.
+  Prefijos: log_ = Login, reg_ = Registro, ayu_ = Ayuda.
+-->
+<resources>
+
+    <!-- ===================== Login (log_) ===================== -->
+    <string name="log_etiqueta_correo">Correo o teléfono</string>
+    <string name="log_etiqueta_contrasena">Contraseña</string>
+    <string name="log_boton_entrando">Entrando…</string>
+    <string name="log_boton_iniciar_sesion">Iniciar sesión</string>
+    <string name="log_boton_crear_cuenta">Crear cuenta</string>
+    <string name="log_boton_invitado">Entrar como invitado</string>
+    <string name="log_panel_titulo">Panel de la panadería</string>
+    <string name="log_boton_admin">Acceso administrador</string>
+    <string name="log_demo_credenciales">Demo · %1$s / %2$s\nCliente · %3$s / %4$s</string>
+
+    <!-- ===================== Registro (reg_) ===================== -->
+    <string name="reg_titulo">Crear cuenta</string>
+    <string name="reg_etiqueta_nombre">Nombre completo</string>
+    <string name="reg_etiqueta_correo">Correo electrónico</string>
+    <string name="reg_etiqueta_telefono">Teléfono</string>
+    <string name="reg_etiqueta_direccion">Dirección de entrega</string>
+    <string name="reg_etiqueta_contrasena">Contraseña</string>
+    <string name="reg_boton_creando_cuenta">Creando cuenta…</string>
+    <string name="reg_boton_crear_cuenta">Crear mi cuenta</string>
+    <string name="reg_boton_volver_login">Ya tengo cuenta, iniciar sesión</string>
+    <string name="reg_terminos">Al crear tu cuenta aceptas los términos del servicio.</string>
+
+    <!-- ===================== Ayuda (ayu_) ===================== -->
+    <string name="ayu_titulo">Ayuda y soporte</string>
+    <string name="ayu_encabezado">¿En qué te ayudamos?</string>
+    <string name="ayu_faq_titulo">Preguntas frecuentes</string>
+
+    <string name="ayu_faq_pedido_pregunta">¿Cómo hago un pedido?</string>
+    <string name="ayu_faq_pedido_respuesta">Elige productos en el catálogo, agrégalos al carrito y confirma. Recibirás un folio para seguir tu pedido.</string>
+    <string name="ayu_faq_sin_internet_pregunta">¿Puedo pedir sin internet?</string>
+    <string name="ayu_faq_sin_internet_respuesta">Sí. El pedido se guarda en el teléfono y se envía a la panadería en cuanto vuelve la conexión.</string>
+    <string name="ayu_faq_seguimiento_pregunta">¿Cómo sigo mi pedido?</string>
+    <string name="ayu_faq_seguimiento_respuesta">En la pestaña Pedido verás el avance: recibido, en preparación, en camino y entregado. Toca ⟳ para actualizar.</string>
+    <string name="ayu_faq_pagos_pregunta">¿Qué formas de pago aceptan?</string>
+    <string name="ayu_faq_pagos_respuesta">Efectivo al recibir, tarjeta con la terminal del repartidor y transferencia SPEI. Se eligen en Perfil → Métodos de pago.</string>
+    <string name="ayu_faq_envio_pregunta">¿Cuánto cuesta el envío?</string>
+    <string name="ayu_faq_envio_respuesta">El envío a domicilio cuesta $30 dentro de Acámbaro y es gratis en pedidos de $250 o más. Recoger en la panadería no tiene costo.</string>
+    <string name="ayu_faq_direccion_pregunta">¿Cómo cambio mi dirección?</string>
+    <string name="ayu_faq_direccion_respuesta">En Perfil → Direcciones de entrega puedes agregar, editar y marcar tu dirección predeterminada.</string>
+    <string name="ayu_faq_no_llega_pregunta">¿Qué hago si mi pedido no llega?</string>
+    <string name="ayu_faq_no_llega_respuesta">Llama a la panadería o escríbenos; con tu folio podemos revisar el estado y al repartidor asignado.</string>
+
+    <string name="ayu_contacto_titulo">Contacto</string>
+    <string name="ayu_contacto_direccion">Panadería Acambapan · Av. Juárez 165, Acámbaro, Guanajuato\nLunes a domingo, 6:00 a 21:00</string>
+    <string name="ayu_boton_llamar">Llamar a la panadería</string>
+    <string name="ayu_boton_correo">Escribir por correo</string>
+    <string name="ayu_asunto_correo">Ayuda con mi pedido</string>
+    <string name="ayu_pie_version">Acambapan %1$s · datos de %2$s</string>
+
+</resources>

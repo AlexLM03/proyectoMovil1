@@ -25,12 +25,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.devnoway.posproyect.R
 import com.devnoway.posproyect.data.modelo.Insumo
 import com.devnoway.posproyect.data.modelo.enCantidad
 import com.devnoway.posproyect.di.ContenedorApp
@@ -66,7 +68,7 @@ fun InventarioScreen(
     var creando by remember { mutableStateOf(false) }
 
     MarcoAdmin(
-        titulo = "Inventario",
+        titulo = stringResource(R.string.inv_titulo),
         rutaActual = Rutas.ADMIN_INVENTARIO,
         onNavegar = onNavegar,
         modifier = modifier,
@@ -90,12 +92,12 @@ fun InventarioScreen(
             Spacer(Modifier.height(12.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 TarjetaIndicador(
-                    titulo = "Insumos registrados",
+                    titulo = stringResource(R.string.inv_insumos_registrados),
                     valor = estado.insumos.size.toString(),
                     modifier = Modifier.weight(1f)
                 )
                 TarjetaIndicador(
-                    titulo = "Bajos de stock",
+                    titulo = stringResource(R.string.inv_bajos_stock),
                     valor = estado.bajos.toString(),
                     modifier = Modifier.weight(1f),
                     colorValor = RojoAlerta
@@ -116,11 +118,14 @@ fun InventarioScreen(
             }
 
             Spacer(Modifier.height(12.dp))
-            BotonPrincipal(texto = "Agregar insumo", onClick = { creando = true })
+            BotonPrincipal(
+                texto = stringResource(R.string.inv_agregar),
+                onClick = { creando = true }
+            )
 
             Spacer(Modifier.height(12.dp))
             Text(
-                text = "Existencias",
+                text = stringResource(R.string.inv_existencias),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
@@ -141,7 +146,7 @@ fun InventarioScreen(
                 if (estado.insumos.isEmpty()) {
                     item {
                         Text(
-                            text = "No hay insumos guardados. Toca ⟳ para traerlos del servidor.",
+                            text = stringResource(R.string.inv_sin_datos),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(vertical = 24.dp)
@@ -202,13 +207,21 @@ private fun TarjetaInsumo(insumo: Insumo, onClick: () -> Unit) {
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
-                    text = "${insumo.stock.enCantidad()} ${insumo.unidad} · mínimo ${insumo.minimo.enCantidad()}",
+                    text = stringResource(
+                        R.string.inv_stock_minimo,
+                        insumo.stock.enCantidad(),
+                        insumo.unidad,
+                        insumo.minimo.enCantidad()
+                    ),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
+            val textoEstado = stringResource(
+                if (insumo.bajo) R.string.inv_estado_bajo else R.string.inv_estado_suficiente
+            )
             EtiquetaEstado(
-                texto = if (insumo.bajo) "Bajo" else "Suficiente",
+                texto = textoEstado,
                 color = if (insumo.bajo) RojoAlerta else VerdeExito
             )
         }
@@ -228,29 +241,40 @@ private fun DialogoInsumo(
     var minimo by remember(insumo) { mutableStateOf(insumo?.minimo?.enCantidad().orEmpty()) }
     var unidad by remember(insumo) { mutableStateOf(insumo?.unidad.orEmpty()) }
     var error by remember { mutableStateOf<String?>(null) }
+    val tituloDialogo = stringResource(
+        if (insumo == null) R.string.inv_agregar else R.string.inv_editar
+    )
+    val etiquetaNombre = stringResource(R.string.inv_nombre)
+    val etiquetaExistencias = stringResource(R.string.inv_existencias)
+    val etiquetaMinimo = stringResource(R.string.inv_minimo)
+    val etiquetaUnidad = stringResource(R.string.inv_unidad)
+    val textoError = stringResource(R.string.inv_error_campos)
+    val textoGuardar = stringResource(R.string.inv_guardar)
+    val textoEliminar = stringResource(R.string.inv_eliminar)
+    val textoCancelar = stringResource(R.string.inv_cancelar)
 
     AlertDialog(
         onDismissRequest = onCerrar,
-        title = { Text(if (insumo == null) "Agregar insumo" else "Editar insumo") },
+        title = { Text(tituloDialogo) },
         text = {
             Column {
-                CampoTexto(nombre, { nombre = it }, "Nombre")
+                CampoTexto(nombre, { nombre = it }, etiquetaNombre)
                 Spacer(Modifier.height(8.dp))
                 CampoTexto(
                     valor = stock,
                     onValorCambio = { stock = it },
-                    etiqueta = "Existencias",
+                    etiqueta = etiquetaExistencias,
                     tipoTeclado = KeyboardType.Decimal
                 )
                 Spacer(Modifier.height(8.dp))
                 CampoTexto(
                     valor = minimo,
                     onValorCambio = { minimo = it },
-                    etiqueta = "Mínimo",
+                    etiqueta = etiquetaMinimo,
                     tipoTeclado = KeyboardType.Decimal
                 )
                 Spacer(Modifier.height(8.dp))
-                CampoTexto(unidad, { unidad = it }, "Unidad (kg, piezas, litros)")
+                CampoTexto(unidad, { unidad = it }, etiquetaUnidad)
                 error?.let {
                     Spacer(Modifier.height(8.dp))
                     Text(
@@ -269,7 +293,7 @@ private fun DialogoInsumo(
                     if (nombre.isBlank() || unidad.isBlank() ||
                         stockNumero == null || minimoNumero == null
                     ) {
-                        error = "Escribe el nombre, la unidad y cantidades válidas."
+                        error = textoError
                         return@TextButton
                     }
                     onGuardar(
@@ -282,14 +306,14 @@ private fun DialogoInsumo(
                         )
                     )
                 }
-            ) { Text("Guardar") }
+            ) { Text(textoGuardar) }
         },
         dismissButton = {
             Row {
                 if (onEliminar != null) {
-                    TextButton(onClick = onEliminar) { Text("Eliminar") }
+                    TextButton(onClick = onEliminar) { Text(textoEliminar) }
                 }
-                TextButton(onClick = onCerrar) { Text("Cancelar") }
+                TextButton(onClick = onCerrar) { Text(textoCancelar) }
             }
         }
     )

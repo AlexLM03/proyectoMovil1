@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Admin screens strings in ENGLISH. The Spanish original lives in
+  res/values/strings_admin.xml (keys must match one to one).
+  Prefixes: adp_ = AdminPanelScreen, adc_ = AdminDashboardScreen,
+            gpe_ = GestionPedidosScreen, inv_ = InventarioScreen.
+-->
+<resources>
+
+    <!-- AdminPanelScreen (adp_) -->
+    <string name="adp_titulo">Main panel</string>
+    <string name="adp_negocio">Acambapan Bakery</string>
+    <string name="adp_sucursal">Acámbaro branch · data saved on your phone</string>
+    <string name="adp_sesion">Session: %1$s · %2$s</string>
+    <string name="adp_sin_sesion">no session</string>
+    <string name="adp_pedidos_hoy">Today\'s orders</string>
+    <string name="adp_ventas_hoy">Today\'s sales</string>
+    <string name="adp_por_enviar">To be sent</string>
+    <string name="adp_insumos_bajos">Low supplies</string>
+    <string name="adp_accesos_rapidos">Quick access</string>
+    <string name="adp_dash_titulo">Admin dashboard</string>
+    <string name="adp_dash_subtitulo">Today\'s metrics and sales</string>
+    <string name="adp_pedidos_titulo">Order management</string>
+    <string name="adp_pedidos_subtitulo">Pending, on the way and delivered orders</string>
+    <string name="adp_inventario_titulo">Inventory</string>
+    <string name="adp_inventario_subtitulo">Bakery supplies and stock</string>
+    <string name="adp_tienda">Store</string>
+    <string name="adp_catalogo_titulo">View the catalog as a customer</string>
+    <string name="adp_catalogo_subtitulo">Go back to the app store</string>
+    <string name="adp_cerrar_sesion">Sign out of the admin account</string>
+
+    <!-- AdminDashboardScreen (adc_) -->
+    <string name="adc_titulo">Admin dashboard</string>
+    <string name="adc_ventas_dia">Sales today</string>
+    <string name="adc_pedidos">Orders</string>
+    <string name="adc_ticket_promedio">Average ticket</string>
+    <string name="adc_insumos_bajos">Low supplies</string>
+    <string name="adc_meta_titulo">Daily goal</string>
+    <string name="adc_meta_valores">%1$s of %2$s</string>
+    <string name="adc_meta_alcanzado">%1$d%% reached</string>
+    <string name="adc_recientes">Recent orders</string>
+    <string name="adc_sin_datos">No orders saved yet. Tap ⟳ to fetch them from the server.</string>
+    <string name="adc_ver_todos">View all orders</string>
+    <string name="adc_revisar_inventario">Check inventory</string>
+
+    <!-- GestionPedidosScreen (gpe_) -->
+    <string name="gpe_titulo">Order management</string>
+    <string name="gpe_filtro_todos">All</string>
+    <string name="gpe_conteo">%1$d orders</string>
+    <string name="gpe_sin_pedidos">No orders match this filter.</string>
+    <string name="gpe_pendiente_envio">Waiting to be sent (created offline)</string>
+    <string name="gpe_ver_seguimiento">View tracking</string>
+    <string name="gpe_marcar">Mark as %1$s</string>
+    <string name="gpe_cancelar">Cancel</string>
+
+    <!-- InventarioScreen (inv_) -->
+    <string name="inv_titulo">Inventory</string>
+    <string name="inv_insumos_registrados">Registered supplies</string>
+    <string name="inv_bajos_stock">Low in stock</string>
+    <string name="inv_agregar">Add supply</string>
+    <string name="inv_editar">Edit supply</string>
+    <string name="inv_existencias">Stock</string>
+    <string name="inv_sin_datos">No supplies saved. Tap ⟳ to fetch them from the server.</string>
+    <string name="inv_stock_minimo">%1$s %2$s · minimum %3$s</string>
+    <string name="inv_estado_bajo">Low</string>
+    <string name="inv_estado_suficiente">Enough</string>
+    <string name="inv_nombre">Name</string>
+    <string name="inv_minimo">Minimum</string>
+    <string name="inv_unidad">Unit (kg, pieces, liters)</string>
+    <string name="inv_error_campos">Enter a name, a unit and valid quantities.</string>
+    <string name="inv_guardar">Save</string>
+    <string name="inv_eliminar">Delete</string>
+    <string name="inv_cancelar">Cancel</string>
+
+</resources>

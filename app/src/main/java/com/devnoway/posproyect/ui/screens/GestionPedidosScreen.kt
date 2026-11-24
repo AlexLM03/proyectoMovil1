@@ -22,11 +22,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.devnoway.posproyect.R
 import com.devnoway.posproyect.data.modelo.EstadoPedido
 import com.devnoway.posproyect.data.modelo.Pedido
 import com.devnoway.posproyect.data.modelo.enPesos
@@ -38,6 +40,7 @@ import com.devnoway.posproyect.ui.components.ChipCategoria
 import com.devnoway.posproyect.ui.components.EtiquetaEstado
 import com.devnoway.posproyect.ui.components.IndicadorConexion
 import com.devnoway.posproyect.ui.components.MarcoAdmin
+import com.devnoway.posproyect.ui.etiquetaRes
 import com.devnoway.posproyect.ui.theme.VerdeExito
 import com.devnoway.posproyect.ui.viewmodel.PedidosAdminViewModel
 
@@ -78,7 +81,7 @@ fun GestionPedidosScreen(
     val estado by viewModel.estado.collectAsStateWithLifecycle()
 
     MarcoAdmin(
-        titulo = "Gestión de pedidos",
+        titulo = stringResource(R.string.gpe_titulo),
         rutaActual = Rutas.ADMIN_PEDIDOS,
         onNavegar = onNavegar,
         modifier = modifier,
@@ -105,13 +108,14 @@ fun GestionPedidosScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 ChipCategoria(
-                    texto = "Todos",
+                    texto = stringResource(R.string.gpe_filtro_todos),
                     seleccionado = estado.filtro == null,
                     onClick = { viewModel.filtrar(null) }
                 )
                 EstadoPedido.entries.forEach { filtro ->
+                    val textoFiltro = stringResource(filtro.etiquetaRes)
                     ChipCategoria(
-                        texto = filtro.etiqueta,
+                        texto = textoFiltro,
                         seleccionado = estado.filtro == filtro,
                         onClick = { viewModel.filtrar(filtro) }
                     )
@@ -129,7 +133,7 @@ fun GestionPedidosScreen(
 
             Spacer(Modifier.height(12.dp))
             Text(
-                text = "${estado.visibles.size} pedidos",
+                text = stringResource(R.string.gpe_conteo, estado.visibles.size),
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -151,7 +155,7 @@ fun GestionPedidosScreen(
                 if (estado.visibles.isEmpty()) {
                     item {
                         Text(
-                            text = "No hay pedidos con este filtro.",
+                            text = stringResource(R.string.gpe_sin_pedidos),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(vertical = 24.dp)
@@ -190,7 +194,7 @@ private fun TarjetaPedido(
                     )
                     if (pedido.pendienteSincronizar) {
                         Text(
-                            text = "Pendiente de envío (creado sin conexión)",
+                            text = stringResource(R.string.gpe_pendiente_envio),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.error
                         )
@@ -204,7 +208,7 @@ private fun TarjetaPedido(
                         color = MaterialTheme.colorScheme.primary
                     )
                     EtiquetaEstado(
-                        texto = pedido.estado.etiqueta,
+                        texto = stringResource(pedido.estado.etiquetaRes),
                         color = colorDeEstado(pedido.estado)
                     )
                 }
@@ -215,16 +219,21 @@ private fun TarjetaPedido(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                BotonTexto(texto = "Ver seguimiento", onClick = onVerSeguimiento)
+                BotonTexto(
+                    texto = stringResource(R.string.gpe_ver_seguimiento),
+                    onClick = onVerSeguimiento
+                )
                 siguienteEstado(pedido.estado)?.let { siguiente ->
+                    val textoSiguiente = stringResource(siguiente.etiquetaRes).lowercase()
+                    val textoMarcar = stringResource(R.string.gpe_marcar, textoSiguiente)
                     BotonTexto(
-                        texto = "Marcar ${siguiente.etiqueta.lowercase()}",
+                        texto = textoMarcar,
                         onClick = { if (habilitado) onCambiarEstado(siguiente) }
                     )
                 }
                 if (!pedido.estado.esFinal) {
                     BotonTexto(
-                        texto = "Cancelar",
+                        texto = stringResource(R.string.gpe_cancelar),
                         onClick = {
                             if (habilitado) onCambiarEstado(EstadoPedido.CANCELADO)
                         }

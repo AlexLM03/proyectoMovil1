@@ -19,11 +19,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.devnoway.posproyect.R
 import com.devnoway.posproyect.data.modelo.EstadoPedido
 import com.devnoway.posproyect.data.modelo.enPesos
 import com.devnoway.posproyect.di.ContenedorApp
@@ -36,6 +38,7 @@ import com.devnoway.posproyect.ui.components.IndicadorConexion
 import com.devnoway.posproyect.ui.components.MarcoAdmin
 import com.devnoway.posproyect.ui.components.TarjetaIndicador
 import com.devnoway.posproyect.ui.components.TituloSeccion
+import com.devnoway.posproyect.ui.etiquetaRes
 import com.devnoway.posproyect.ui.theme.RojoAlerta
 import com.devnoway.posproyect.ui.theme.VerdeExito
 import com.devnoway.posproyect.ui.viewmodel.AdminResumenViewModel
@@ -58,9 +61,18 @@ fun AdminDashboardScreen(
 ) {
     val estado by viewModel.estado.collectAsStateWithLifecycle()
     val avanceMeta = (estado.ventasHoy / META_DEL_DIA).toFloat().coerceIn(0f, 1f)
+    val textoMeta = stringResource(
+        R.string.adc_meta_valores,
+        estado.ventasHoy.enPesos(),
+        META_DEL_DIA.enPesos()
+    )
+    val textoAvance = stringResource(
+        R.string.adc_meta_alcanzado,
+        (avanceMeta * 100).toInt()
+    )
 
     MarcoAdmin(
-        titulo = "Dash administrativo",
+        titulo = stringResource(R.string.adc_titulo),
         rutaActual = Rutas.ADMIN_DASH,
         onNavegar = onNavegar,
         modifier = modifier,
@@ -92,24 +104,24 @@ fun AdminDashboardScreen(
 
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 TarjetaIndicador(
-                    titulo = "Ventas del día",
+                    titulo = stringResource(R.string.adc_ventas_dia),
                     valor = estado.ventasHoy.enPesos(),
                     modifier = Modifier.weight(1f)
                 )
                 TarjetaIndicador(
-                    titulo = "Pedidos",
+                    titulo = stringResource(R.string.adc_pedidos),
                     valor = estado.pedidosHoy.toString(),
                     modifier = Modifier.weight(1f)
                 )
             }
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 TarjetaIndicador(
-                    titulo = "Ticket promedio",
+                    titulo = stringResource(R.string.adc_ticket_promedio),
                     valor = estado.ticketPromedio.enPesos(),
                     modifier = Modifier.weight(1f)
                 )
                 TarjetaIndicador(
-                    titulo = "Insumos bajos",
+                    titulo = stringResource(R.string.adc_insumos_bajos),
                     valor = estado.insumosBajos.toString(),
                     modifier = Modifier.weight(1f),
                     colorValor = RojoAlerta
@@ -117,9 +129,9 @@ fun AdminDashboardScreen(
             }
 
             Spacer(Modifier.height(4.dp))
-            TituloSeccion("Meta del día")
+            TituloSeccion(stringResource(R.string.adc_meta_titulo))
             Text(
-                text = "${estado.ventasHoy.enPesos()} de ${META_DEL_DIA.enPesos()}",
+                text = textoMeta,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -129,16 +141,16 @@ fun AdminDashboardScreen(
                 color = MaterialTheme.colorScheme.primary
             )
             Text(
-                text = "${(avanceMeta * 100).toInt()}% alcanzado",
+                text = textoAvance,
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.SemiBold
             )
 
             Spacer(Modifier.height(4.dp))
-            TituloSeccion("Pedidos recientes")
+            TituloSeccion(stringResource(R.string.adc_recientes))
             if (estado.recientes.isEmpty()) {
-                SinDatos("Todavía no hay pedidos guardados. Toca ⟳ para traerlos del servidor.")
+                SinDatos(stringResource(R.string.adc_sin_datos))
             }
             estado.recientes.forEach { pedido ->
                 Card(
@@ -170,7 +182,7 @@ fun AdminDashboardScreen(
                                 fontWeight = FontWeight.Bold
                             )
                             EtiquetaEstado(
-                                texto = pedido.estado.etiqueta,
+                                texto = stringResource(pedido.estado.etiquetaRes),
                                 color = if (pedido.estado == EstadoPedido.ENTREGADO) {
                                     VerdeExito
                                 } else {
@@ -184,11 +196,11 @@ fun AdminDashboardScreen(
 
             Spacer(Modifier.height(8.dp))
             BotonPrincipal(
-                texto = "Ver todos los pedidos",
+                texto = stringResource(R.string.adc_ver_todos),
                 onClick = { onNavegar(Rutas.ADMIN_PEDIDOS) }
             )
             BotonSecundario(
-                texto = "Revisar inventario",
+                texto = stringResource(R.string.adc_revisar_inventario),
                 onClick = { onNavegar(Rutas.ADMIN_INVENTARIO) }
             )
             Spacer(Modifier.height(8.dp))

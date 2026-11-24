@@ -12,8 +12,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.devnoway.posproyect.R
 import com.devnoway.posproyect.ui.components.BotonPrincipal
 import com.devnoway.posproyect.ui.components.BotonSecundario
 import com.devnoway.posproyect.ui.components.MarcaAcambapan
@@ -43,21 +45,27 @@ fun AccesoRestringidoScreen(
             MarcaAcambapan(tamanoLogo = 96.dp, mostrarEslogan = false)
             Spacer(Modifier.height(24.dp))
             Text(
-                text = "Esta sección es para el personal de la panadería.",
+                text = stringResource(R.string.acc_titulo),
                 style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Center
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                text = "Inicia sesión con una cuenta de administrador para gestionar pedidos e inventario.",
+                text = stringResource(R.string.acc_mensaje),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
             )
             Spacer(Modifier.height(24.dp))
-            BotonPrincipal(texto = "Iniciar sesión como administrador", onClick = onIrLogin)
+            BotonPrincipal(
+                texto = stringResource(R.string.acc_iniciar_sesion_admin),
+                onClick = onIrLogin
+            )
             Spacer(Modifier.height(10.dp))
-            BotonSecundario(texto = "Volver al catálogo", onClick = onVolver)
+            BotonSecundario(
+                texto = stringResource(R.string.acc_volver_catalogo),
+                onClick = onVolver
+            )
         }
     }
 }

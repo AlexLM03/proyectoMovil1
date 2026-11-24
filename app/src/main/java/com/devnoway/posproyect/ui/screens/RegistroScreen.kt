@@ -19,10 +19,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.devnoway.posproyect.R
 import com.devnoway.posproyect.di.ContenedorApp
 import com.devnoway.posproyect.ui.components.BandaMensaje
 import com.devnoway.posproyect.ui.components.BarraSuperior
@@ -61,7 +63,7 @@ fun RegistroScreen(
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
-        topBar = { BarraSuperior(titulo = "Crear cuenta", onAtras = onVolverLogin) }
+        topBar = { BarraSuperior(titulo = stringResource(R.string.reg_titulo), onAtras = onVolverLogin) }
     ) { padding ->
         Column(
             modifier = Modifier
@@ -75,16 +77,35 @@ fun RegistroScreen(
             MarcaAcambapan(tamanoLogo = 90.dp, mostrarEslogan = false)
             Spacer(Modifier.height(4.dp))
 
-            CampoTexto(nombre, { nombre = it }, "Nombre completo")
+            CampoTexto(
+                nombre,
+                { nombre = it },
+                stringResource(R.string.reg_etiqueta_nombre)
+            )
             CampoTexto(
                 correo,
                 { correo = it },
-                "Correo electrónico",
+                stringResource(R.string.reg_etiqueta_correo),
                 tipoTeclado = KeyboardType.Email
             )
-            CampoTexto(telefono, { telefono = it }, "Teléfono", tipoTeclado = KeyboardType.Phone)
-            CampoTexto(direccion, { direccion = it }, "Dirección de entrega", lineas = 2)
-            CampoTexto(contrasena, { contrasena = it }, "Contraseña", esContrasena = true)
+            CampoTexto(
+                telefono,
+                { telefono = it },
+                stringResource(R.string.reg_etiqueta_telefono),
+                tipoTeclado = KeyboardType.Phone
+            )
+            CampoTexto(
+                direccion,
+                { direccion = it },
+                stringResource(R.string.reg_etiqueta_direccion),
+                lineas = 2
+            )
+            CampoTexto(
+                contrasena,
+                { contrasena = it },
+                stringResource(R.string.reg_etiqueta_contrasena),
+                esContrasena = true
+            )
 
             estado.error?.let { mensaje ->
                 BandaMensaje(
@@ -96,7 +117,11 @@ fun RegistroScreen(
 
             Spacer(Modifier.height(4.dp))
             BotonPrincipal(
-                texto = if (estado.cargando) "Creando cuenta…" else "Crear mi cuenta",
+                texto = if (estado.cargando) {
+                    stringResource(R.string.reg_boton_creando_cuenta)
+                } else {
+                    stringResource(R.string.reg_boton_crear_cuenta)
+                },
                 onClick = {
                     viewModel.registrar(
                         nombre = nombre,
@@ -108,10 +133,13 @@ fun RegistroScreen(
                 },
                 habilitado = !estado.cargando
             )
-            BotonTexto(texto = "Ya tengo cuenta, iniciar sesión", onClick = onVolverLogin)
+            BotonTexto(
+                texto = stringResource(R.string.reg_boton_volver_login),
+                onClick = onVolverLogin
+            )
 
             Text(
-                text = "Al crear tu cuenta aceptas los términos del servicio.",
+                text = stringResource(R.string.reg_terminos),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

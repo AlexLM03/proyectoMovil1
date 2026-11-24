@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  English strings for the access and help screens.
+  The Spanish original lives in res/values/strings_acceso.xml.
+  Prefixes: log_ = Login, reg_ = Sign up, ayu_ = Help.
+-->
+<resources>
+
+    <!-- ===================== Login (log_) ===================== -->
+    <string name="log_etiqueta_correo">Email or phone</string>
+    <string name="log_etiqueta_contrasena">Password</string>
+    <string name="log_boton_entrando">Signing in…</string>
+    <string name="log_boton_iniciar_sesion">Sign in</string>
+    <string name="log_boton_crear_cuenta">Create account</string>
+    <string name="log_boton_invitado">Continue as guest</string>
+    <string name="log_panel_titulo">Bakery panel</string>
+    <string name="log_boton_admin">Administrator access</string>
+    <string name="log_demo_credenciales">Demo · %1$s / %2$s\nCustomer · %3$s / %4$s</string>
+
+    <!-- ===================== Sign up (reg_) ===================== -->
+    <string name="reg_titulo">Create account</string>
+    <string name="reg_etiqueta_nombre">Full name</string>
+    <string name="reg_etiqueta_correo">Email address</string>
+    <string name="reg_etiqueta_telefono">Phone number</string>
+    <string name="reg_etiqueta_direccion">Delivery address</string>
+    <string name="reg_etiqueta_contrasena">Password</string>
+    <string name="reg_boton_creando_cuenta">Creating account…</string>
+    <string name="reg_boton_crear_cuenta">Create my account</string>
+    <string name="reg_boton_volver_login">I already have an account, sign in</string>
+    <string name="reg_terminos">By creating your account you accept the terms of service.</string>
+
+    <!-- ===================== Help (ayu_) ===================== -->
+    <string name="ayu_titulo">Help and support</string>
+    <string name="ayu_encabezado">How can we help you?</string>
+    <string name="ayu_faq_titulo">Frequently asked questions</string>
+
+    <string name="ayu_faq_pedido_pregunta">How do I place an order?</string>
+    <string name="ayu_faq_pedido_respuesta">Pick products in the catalog, add them to the cart and confirm. You will receive an order number to track your order.</string>
+    <string name="ayu_faq_sin_internet_pregunta">Can I order without internet?</string>
+    <string name="ayu_faq_sin_internet_respuesta">Yes. The order is saved on your phone and sent to the bakery as soon as the connection comes back.</string>
+    <string name="ayu_faq_seguimiento_pregunta">How do I track my order?</string>
+    <string name="ayu_faq_seguimiento_respuesta">In the Order tab you will see the progress: received, being prepared, on the way and delivered. Tap ⟳ to refresh.</string>
+    <string name="ayu_faq_pagos_pregunta">Which payment methods do you accept?</string>
+    <string name="ayu_faq_pagos_respuesta">Cash on delivery, card with the driver terminal and SPEI bank transfer. You pick one in Profile → Payment methods.</string>
+    <string name="ayu_faq_envio_pregunta">How much does delivery cost?</string>
+    <string name="ayu_faq_envio_respuesta">Home delivery costs $30 inside Acámbaro and is free on orders of $250 or more. Picking up at the bakery is free.</string>
+    <string name="ayu_faq_direccion_pregunta">How do I change my address?</string>
+    <string name="ayu_faq_direccion_respuesta">In Profile → Delivery addresses you can add, edit and set your default address.</string>
+    <string name="ayu_faq_no_llega_pregunta">What if my order does not arrive?</string>
+    <string name="ayu_faq_no_llega_respuesta">Call the bakery or write to us; with your order number we can check the status and the assigned driver.</string>
+
+    <string name="ayu_contacto_titulo">Contact</string>
+    <string name="ayu_contacto_direccion">Acambapan Bakery · Av. Juárez 165, Acámbaro, Guanajuato\nMonday to Sunday, 6:00 to 21:00</string>
+    <string name="ayu_boton_llamar">Call the bakery</string>
+    <string name="ayu_boton_correo">Send an email</string>
+    <string name="ayu_asunto_correo">Help with my order</string>
+    <string name="ayu_pie_version">Acambapan %1$s · data from %2$s</string>
+
+</resources>
