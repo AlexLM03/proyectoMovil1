@@ -1,5 +1,6 @@
 package com.devnoway.posproyect.data.repository
 
+import com.devnoway.posproyect.R
 import com.devnoway.posproyect.data.conectividad.ObservadorConectividad
 import com.devnoway.posproyect.data.local.daos.DireccionDao
 import com.devnoway.posproyect.data.mapeadores.aEntidad
@@ -7,6 +8,7 @@ import com.devnoway.posproyect.data.mapeadores.aModelo
 import com.devnoway.posproyect.data.mapeadores.aSolicitud
 import com.devnoway.posproyect.data.modelo.Direccion
 import com.devnoway.posproyect.data.remote.ApiServicio
+import com.devnoway.posproyect.data.remote.ErrorLocalizado
 import com.devnoway.posproyect.data.remote.Resultado
 import com.devnoway.posproyect.data.remote.ejecutarRed
 import kotlinx.coroutines.flow.Flow
@@ -39,7 +41,7 @@ class DireccionRepository(
 
     suspend fun sincronizar(usuarioId: Int): Resultado<Int> {
         if (!conectividad.estaEnLinea()) {
-            return Resultado.Fallo("Sin conexión: se muestran las direcciones guardadas.")
+            return Resultado.Fallo(R.string.err_dir_sin_conexion_lista)
         }
         return ejecutarRed {
             val lista = api.direcciones().direcciones.orEmpty()
@@ -52,10 +54,10 @@ class DireccionRepository(
     /** Crea (id = 0) o actualiza una dirección y refresca la copia local. */
     suspend fun guardar(usuarioId: Int, direccion: Direccion): Resultado<Unit> {
         if (direccion.alias.isBlank() || direccion.calle.isBlank()) {
-            return Resultado.Fallo("Escribe un alias y la dirección.")
+            return Resultado.Fallo(R.string.err_dir_campos)
         }
         if (!conectividad.estaEnLinea()) {
-            return Resultado.Fallo("Necesitas conexión para guardar una dirección.")
+            return Resultado.Fallo(R.string.err_dir_guardar_sin_conexion)
         }
         return ejecutarRed {
             val solicitud = direccion.aSolicitud()
@@ -70,14 +72,14 @@ class DireccionRepository(
 
     suspend fun eliminar(usuarioId: Int, id: Int): Resultado<Unit> {
         if (!conectividad.estaEnLinea()) {
-            return Resultado.Fallo("Necesitas conexión para eliminar una dirección.")
+            return Resultado.Fallo(R.string.err_dir_eliminar_sin_conexion)
         }
         return ejecutarRed {
             val respuesta = api.eliminarDireccion(id)
             if (!respuesta.ok) {
-                throw IllegalStateException(
-                    respuesta.error?.mensaje ?: "El servidor no permitió eliminar la dirección."
-                )
+                val delServidor = respuesta.error?.mensaje
+                if (delServidor != null) throw IllegalStateException(delServidor)
+                throw ErrorLocalizado(R.string.err_dir_eliminar_servidor)
             }
             refrescarLocal(usuarioId)
         }

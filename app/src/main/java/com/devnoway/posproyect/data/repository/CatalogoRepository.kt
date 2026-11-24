@@ -1,5 +1,6 @@
 package com.devnoway.posproyect.data.repository
 
+import com.devnoway.posproyect.R
 import com.devnoway.posproyect.data.conectividad.ObservadorConectividad
 import com.devnoway.posproyect.data.local.daos.CatalogoDao
 import com.devnoway.posproyect.data.local.daos.MultimediaDao
@@ -11,6 +12,7 @@ import com.devnoway.posproyect.data.modelo.Categoria
 import com.devnoway.posproyect.data.modelo.Producto
 import com.devnoway.posproyect.data.modelo.TandaHorneado
 import com.devnoway.posproyect.data.remote.ApiServicio
+import com.devnoway.posproyect.data.remote.ErrorLocalizado
 import com.devnoway.posproyect.data.remote.Resultado
 import com.devnoway.posproyect.data.remote.ejecutarRed
 import kotlinx.coroutines.flow.Flow
@@ -55,7 +57,7 @@ class CatalogoRepository(
      */
     suspend fun sincronizar(): Resultado<Int> {
         if (!conectividad.estaEnLinea()) {
-            return Resultado.Fallo("Sin conexión: se muestra el catálogo guardado.")
+            return Resultado.Fallo(R.string.err_catalogo_guardado)
         }
         return ejecutarRed {
             val categoriasDto = api.categorias().categorias.orEmpty()
@@ -73,12 +75,12 @@ class CatalogoRepository(
     /** Refresca un producto concreto y su multimedia desde el servidor. */
     suspend fun refrescarProducto(id: Int): Resultado<Unit> {
         if (!conectividad.estaEnLinea()) {
-            return Resultado.Fallo("Sin conexión con el servidor.")
+            return Resultado.Fallo(R.string.err_catalogo_sin_conexion)
         }
         return ejecutarRed {
             val respuesta = api.producto(id)
             val producto = respuesta.producto
-                ?: throw IllegalStateException("El producto $id no existe en el servidor.")
+                ?: throw ErrorLocalizado(R.string.err_producto_no_existe, id)
             catalogoDao.guardarProductos(listOf(producto.aEntidad()))
             respuesta.multimedia?.let { multimedia ->
                 multimediaDao.borrarMultimediaDeProducto(id)

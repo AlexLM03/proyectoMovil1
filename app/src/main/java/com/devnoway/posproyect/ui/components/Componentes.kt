@@ -57,6 +57,7 @@ import com.devnoway.posproyect.R
 import com.devnoway.posproyect.data.modelo.Producto
 import com.devnoway.posproyect.data.modelo.enPesos
 import com.devnoway.posproyect.navigation.Rutas
+import androidx.annotation.StringRes
 import androidx.compose.foundation.shape.CircleShape
 import com.devnoway.posproyect.ui.theme.RojoAlerta
 import com.devnoway.posproyect.ui.theme.VerdeExito
@@ -78,7 +79,7 @@ import com.devnoway.posproyect.ui.theme.VerdeExito
 fun LogoAcambapan(modifier: Modifier = Modifier, tamano: Dp = 96.dp) {
     Image(
         painter = painterResource(R.drawable.logo_acambapan),
-        contentDescription = "Logotipo de Acambapan",
+        contentDescription = stringResource(R.string.logo_descripcion),
         modifier = modifier.size(tamano)
     )
 }
@@ -316,20 +317,24 @@ fun BarraSuperior(
     )
 }
 
-private data class DestinoBarra(val ruta: String, val etiqueta: String, val emoji: String)
+private data class DestinoBarra(
+    val ruta: String,
+    @param:StringRes val etiqueta: Int,
+    val emoji: String
+)
 
 private val destinosCliente = listOf(
-    DestinoBarra(Rutas.CATALOGO, "Catálogo", "🏠"),
-    DestinoBarra(Rutas.CARRITO, "Carrito", "🛒"),
-    DestinoBarra(Rutas.SEGUIMIENTO, "Pedido", "📍"),
-    DestinoBarra(Rutas.PERFIL, "Perfil", "👤")
+    DestinoBarra(Rutas.CATALOGO, R.string.nav_catalogo, "🏠"),
+    DestinoBarra(Rutas.CARRITO, R.string.nav_carrito, "🛒"),
+    DestinoBarra(Rutas.SEGUIMIENTO, R.string.nav_pedido, "📍"),
+    DestinoBarra(Rutas.PERFIL, R.string.nav_perfil, "👤")
 )
 
 private val destinosAdmin = listOf(
-    DestinoBarra(Rutas.ADMIN_PANEL, "Panel", "🏪"),
-    DestinoBarra(Rutas.ADMIN_DASH, "Dash", "📊"),
-    DestinoBarra(Rutas.ADMIN_PEDIDOS, "Pedidos", "📋"),
-    DestinoBarra(Rutas.ADMIN_INVENTARIO, "Inventario", "📦")
+    DestinoBarra(Rutas.ADMIN_PANEL, R.string.nav_panel, "🏪"),
+    DestinoBarra(Rutas.ADMIN_DASH, R.string.nav_dash, "📊"),
+    DestinoBarra(Rutas.ADMIN_PEDIDOS, R.string.nav_pedidos, "📋"),
+    DestinoBarra(Rutas.ADMIN_INVENTARIO, R.string.nav_inventario, "📦")
 )
 
 @Composable
@@ -344,7 +349,7 @@ private fun BarraInferior(
                 selected = rutaActual == destino.ruta,
                 onClick = { onNavegar(destino.ruta) },
                 icon = { Text(text = destino.emoji, fontSize = 20.sp) },
-                label = { Text(destino.etiqueta, maxLines = 1) },
+                label = { Text(stringResource(destino.etiqueta), maxLines = 1) },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     selectedTextColor = MaterialTheme.colorScheme.primary,
@@ -551,7 +556,7 @@ fun DialogoPendiente(
     AlertDialog(
         onDismissRequest = onCerrar,
         confirmButton = {
-            TextButton(onClick = onCerrar) { Text("Entendido") }
+            TextButton(onClick = onCerrar) { Text(stringResource(R.string.accion_entendido)) }
         },
         title = { Text(titulo) },
         text = { Text(mensaje) }
@@ -583,11 +588,13 @@ fun IndicadorConexion(
         )
         Spacer(Modifier.width(6.dp))
         Text(
-            text = when {
-                sincronizando -> "Sincronizando…"
-                enLinea -> "En línea"
-                else -> "Sin conexión"
-            },
+            text = stringResource(
+                when {
+                    sincronizando -> R.string.conn_sincronizando
+                    enLinea -> R.string.conn_en_linea
+                    else -> R.string.conn_sin_conexion
+                }
+            ),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -626,7 +633,7 @@ fun BandaMensaje(
                 modifier = Modifier.weight(1f)
             )
             if (onCerrar != null) {
-                TextButton(onClick = onCerrar) { Text("OK") }
+                TextButton(onClick = onCerrar) { Text(stringResource(R.string.accion_ok)) }
             }
         }
     }

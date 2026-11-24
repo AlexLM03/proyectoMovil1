@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Mensajes de confirmación que redactan los ViewModel.
+  Se resuelven con contexto.getString(...) para que cambien de idioma.
+-->
+<resources>
+    <string name="vm_carrito_direccion">Escribe la dirección de entrega.</string>
+    <string name="vm_direccion_guardada">Dirección guardada.</string>
+    <string name="vm_direccion_eliminada">Dirección eliminada.</string>
+    <string name="vm_insumo_guardado">Insumo \"%1$s\" guardado.</string>
+    <string name="vm_insumo_eliminado">Insumo eliminado.</string>
+    <string name="vm_metodo_pago">Método de pago: %1$s.</string>
+    <string name="vm_avisos_leidos">Marcaste %1$d aviso(s) como leídos.</string>
+    <string name="vm_pedido_actualizado">Pedido %1$s actualizado a %2$s.</string>
+    <string name="vm_perfil_sin_sesion">Inicia sesión para sincronizar tu historial de pedidos.</string>
+</resources>

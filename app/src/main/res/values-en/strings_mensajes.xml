@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Confirmation messages written by the ViewModels. -->
+<resources>
+    <string name="vm_carrito_direccion">Enter the delivery address.</string>
+    <string name="vm_direccion_guardada">Address saved.</string>
+    <string name="vm_direccion_eliminada">Address deleted.</string>
+    <string name="vm_insumo_guardado">Supply \"%1$s\" saved.</string>
+    <string name="vm_insumo_eliminado">Supply deleted.</string>
+    <string name="vm_metodo_pago">Payment method: %1$s.</string>
+    <string name="vm_avisos_leidos">You marked %1$d notification(s) as read.</string>
+    <string name="vm_pedido_actualizado">Order %1$s updated to %2$s.</string>
+    <string name="vm_perfil_sin_sesion">Sign in to sync your order history.</string>
+</resources>

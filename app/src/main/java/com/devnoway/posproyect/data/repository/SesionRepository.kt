@@ -1,5 +1,6 @@
 package com.devnoway.posproyect.data.repository
 
+import com.devnoway.posproyect.R
 import com.devnoway.posproyect.data.conectividad.ObservadorConectividad
 import com.devnoway.posproyect.data.local.daos.UsuarioDao
 import com.devnoway.posproyect.data.mapeadores.aEntidad
@@ -36,7 +37,7 @@ class SesionRepository(
     /** Guarda el método de pago preferido del cliente en el servidor y en local. */
     suspend fun cambiarMetodoPago(metodo: MetodoPago): Resultado<Usuario> {
         if (!conectividad.estaEnLinea()) {
-            return Resultado.Fallo("Necesitas conexión para cambiar tu método de pago.")
+            return Resultado.Fallo(R.string.err_metodo_pago_sin_conexion)
         }
         return when (
             val resultado = ejecutarRed {
@@ -47,7 +48,7 @@ class SesionRepository(
             is Resultado.Exito -> {
                 val dto = resultado.datos.usuario
                 if (dto == null) {
-                    Resultado.Fallo("El servidor no devolvió el perfil actualizado.")
+                    Resultado.Fallo(R.string.err_perfil_no_devuelto)
                 } else {
                     val usuario = dto.aModelo()
                     almacenSesion.actualizarUsuario(usuario)
@@ -70,10 +71,10 @@ class SesionRepository(
         rolRequerido: String? = null
     ): Resultado<Usuario> {
         if (correo.isBlank() || contrasena.isBlank()) {
-            return Resultado.Fallo("Escribe tu correo y tu contraseña.")
+            return Resultado.Fallo(R.string.err_login_campos)
         }
         if (!conectividad.estaEnLinea()) {
-            return Resultado.Fallo("Necesitas conexión para iniciar sesión. Tus datos locales siguen disponibles.")
+            return Resultado.Fallo(R.string.err_login_sin_conexion)
         }
 
         val resultado = ejecutarRed {
@@ -90,16 +91,16 @@ class SesionRepository(
         contrasena: String
     ): Resultado<Usuario> {
         if (nombre.isBlank() || correo.isBlank() || telefono.isBlank() || direccion.isBlank()) {
-            return Resultado.Fallo("Completa todos los campos del registro.")
+            return Resultado.Fallo(R.string.err_registro_campos)
         }
         if (!correo.contains("@")) {
-            return Resultado.Fallo("Escribe un correo electrónico válido.")
+            return Resultado.Fallo(R.string.err_correo_invalido)
         }
         if (contrasena.length < 6) {
-            return Resultado.Fallo("La contraseña debe tener al menos 6 caracteres.")
+            return Resultado.Fallo(R.string.err_password_corta)
         }
         if (!conectividad.estaEnLinea()) {
-            return Resultado.Fallo("Necesitas conexión para crear tu cuenta.")
+            return Resultado.Fallo(R.string.err_registro_sin_conexion)
         }
 
         val resultado = ejecutarRed {
@@ -126,13 +127,16 @@ class SesionRepository(
             val token = respuesta.token
             val usuarioDto = respuesta.usuario
             if (token.isNullOrBlank() || usuarioDto == null) {
-                Resultado.Fallo(
-                    respuesta.error?.mensaje ?: "El servidor no devolvió la sesión."
-                )
+                val delServidor = respuesta.error?.mensaje
+                if (delServidor != null) {
+                    Resultado.Fallo(delServidor)
+                } else {
+                    Resultado.Fallo(R.string.err_sesion_no_devuelta)
+                }
             } else {
                 val usuario = usuarioDto.aModelo()
                 if (rolRequerido != null && usuario.rol != rolRequerido) {
-                    Resultado.Fallo("Esa cuenta no tiene el rol de $rolRequerido.")
+                    Resultado.Fallo(R.string.err_rol_requerido, rolRequerido)
                 } else {
                     almacenSesion.guardar(usuario, token)
                     usuarioDao.guardarUsuario(usuario.aEntidad())

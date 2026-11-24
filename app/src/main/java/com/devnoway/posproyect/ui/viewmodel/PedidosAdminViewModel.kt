@@ -1,5 +1,9 @@
 package com.devnoway.posproyect.ui.viewmodel
 
+import android.content.Context
+import com.devnoway.posproyect.R
+import com.devnoway.posproyect.ui.etiquetaRes
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -20,7 +24,10 @@ import kotlinx.coroutines.launch
  * ViewModel de la gestión de pedidos del administrador: filtros por estado y
  * cambio de estado (que se refleja en el servidor y en el teléfono).
  */
-class PedidosAdminViewModel(private val pedidoRepository: PedidoRepository) : ViewModel() {
+class PedidosAdminViewModel(
+    private val contexto: Context,
+    private val pedidoRepository: PedidoRepository
+) : ViewModel() {
 
     data class Estado(
         val pedidos: List<Pedido> = emptyList(),
@@ -62,7 +69,7 @@ class PedidosAdminViewModel(private val pedidoRepository: PedidoRepository) : Vi
             _estado.update {
                 it.copy(
                     trabajando = false,
-                    mensaje = (resultado as? Resultado.Fallo)?.mensaje
+                    mensaje = (resultado as? Resultado.Fallo)?.texto(contexto)
                 )
             }
         }
@@ -78,8 +85,8 @@ class PedidosAdminViewModel(private val pedidoRepository: PedidoRepository) : Vi
                 it.copy(
                     trabajando = false,
                     mensaje = when (resultado) {
-                        is Resultado.Fallo -> resultado.mensaje
-                        is Resultado.Exito -> "Pedido $folio actualizado a ${estado.etiqueta}."
+                        is Resultado.Fallo -> resultado.texto(contexto)
+                        is Resultado.Exito -> contexto.getString(R.string.vm_pedido_actualizado, folio, contexto.getString(estado.etiquetaRes))
                     }
                 )
             }
@@ -92,7 +99,7 @@ class PedidosAdminViewModel(private val pedidoRepository: PedidoRepository) : Vi
 
     companion object {
         fun fabrica(contenedor: ContenedorApp): ViewModelProvider.Factory = viewModelFactory {
-            initializer { PedidosAdminViewModel(contenedor.pedidoRepository) }
+            initializer { PedidosAdminViewModel(contenedor.contexto, contenedor.pedidoRepository) }
         }
     }
 }

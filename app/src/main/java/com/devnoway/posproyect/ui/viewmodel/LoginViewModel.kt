@@ -1,5 +1,8 @@
 package com.devnoway.posproyect.ui.viewmodel
 
+import android.content.Context
+import com.devnoway.posproyect.R
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -22,7 +25,10 @@ import kotlinx.coroutines.launch
  * viven aquí. Cuando la sesión cambia, `sesion` lo notifica y la pantalla
  * navega a la siguiente sección según el rol.
  */
-class LoginViewModel(private val sesionRepository: SesionRepository) : ViewModel() {
+class LoginViewModel(
+    private val contexto: Context,
+    private val sesionRepository: SesionRepository
+) : ViewModel() {
 
     data class Estado(
         val correo: String = "",
@@ -75,7 +81,7 @@ class LoginViewModel(private val sesionRepository: SesionRepository) : ViewModel
                 }
 
                 is Resultado.Fallo -> _estado.update {
-                    it.copy(cargando = false, error = resultado.mensaje)
+                    it.copy(cargando = false, error = resultado.texto(contexto))
                 }
             }
         }
@@ -90,7 +96,7 @@ class LoginViewModel(private val sesionRepository: SesionRepository) : ViewModel
 
     companion object {
         fun fabrica(contenedor: ContenedorApp): ViewModelProvider.Factory = viewModelFactory {
-            initializer { LoginViewModel(contenedor.sesionRepository) }
+            initializer { LoginViewModel(contenedor.contexto, contenedor.sesionRepository) }
         }
     }
 }

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Error and validation messages written by the app itself (repository + network layer). -->
+<resources>
+    <!-- Network layer (Resultado / ejecutarRed) -->
+    <string name="err_sesion_expirada">Your session expired. Please sign in again.</string>
+    <string name="err_sin_permiso">You do not have permission for this action.</string>
+    <string name="err_no_existe">The resource does not exist on the server.</string>
+    <string name="err_conflicto">The server rejected the change because of a state conflict.</string>
+    <string name="err_servidor_codigo">The server responded with error %1$d.</string>
+    <string name="err_sin_conexion">No connection to the server. Check your network and try again.</string>
+    <string name="err_inesperado">An unexpected error occurred.</string>
+
+    <!-- Catalog -->
+    <string name="err_catalogo_sin_conexion">No connection to the server.</string>
+    <string name="err_catalogo_guardado">Offline: showing the saved catalog.</string>
+    <string name="err_producto_no_existe">Product %1$d does not exist on the server.</string>
+
+    <!-- Addresses -->
+    <string name="err_dir_sin_conexion_lista">Offline: showing your saved addresses.</string>
+    <string name="err_dir_campos">Enter a nickname and the address.</string>
+    <string name="err_dir_guardar_sin_conexion">You need a connection to save an address.</string>
+    <string name="err_dir_eliminar_sin_conexion">You need a connection to delete an address.</string>
+    <string name="err_dir_eliminar_servidor">The server did not allow deleting the address.</string>
+
+    <!-- Inventory -->
+    <string name="err_insumo_sin_conexion_lista">Offline: showing the saved inventory.</string>
+    <string name="err_insumo_campos">Name and unit are required.</string>
+    <string name="err_insumo_negativos">Stock and minimum cannot be negative.</string>
+    <string name="err_insumo_modificar_sin_conexion">You need a connection to change the inventory.</string>
+    <string name="err_insumo_no_devuelto">The server did not return the saved supply.</string>
+    <string name="err_insumo_eliminar_sin_conexion">You need a connection to delete a supply.</string>
+    <string name="err_insumo_eliminar_servidor">The server did not allow deleting the supply.</string>
+
+    <!-- Notifications -->
+    <string name="err_avisos_sin_conexion">Offline: showing your saved notifications.</string>
+
+    <!-- Orders -->
+    <string name="err_carrito_vacio">Add at least one product to the cart.</string>
+    <string name="err_pedidos_cola">Offline: orders will be sent when the network returns.</string>
+    <string name="err_pedido_en_cola">Offline: the order is still saved on your phone.</string>
+    <string name="err_pedido_no_local">Order %1$s does not exist on this phone.</string>
+    <string name="err_pedido_estado_sin_conexion">You need a connection to change the status of a sent order.</string>
+    <string name="err_pedido_no_actualizado">The server did not return the updated order.</string>
+    <string name="err_pedido_cancelar_sin_conexion">You need a connection to cancel the order.</string>
+    <string name="err_pedido_no_cancelado">The server did not return the canceled order.</string>
+    <string name="err_pedido_ultimo_estado">Offline: showing the last saved status.</string>
+    <string name="err_pedido_no_servidor">Order %1$s does not exist on the server.</string>
+    <string name="err_pedido_datos_guardados">Offline: showing saved data.</string>
+    <string name="err_resumen_no_devuelto">The server did not return the summary.</string>
+    <string name="err_pedido_ya_no_local">Order %1$s is no longer on this phone.</string>
+    <string name="err_pedido_sin_productos">Order %1$s has no products.</string>
+    <string name="err_pedido_no_confirmado">The server did not confirm the order.</string>
+
+    <!-- Session and sign-up -->
+    <string name="err_metodo_pago_sin_conexion">You need a connection to change your payment method.</string>
+    <string name="err_perfil_no_devuelto">The server did not return the updated profile.</string>
+    <string name="err_login_campos">Enter your email and password.</string>
+    <string name="err_login_sin_conexion">You need a connection to sign in. Your local data is still available.</string>
+    <string name="err_registro_campos">Complete every field of the sign-up form.</string>
+    <string name="err_correo_invalido">Enter a valid email address.</string>
+    <string name="err_password_corta">The password must be at least 6 characters long.</string>
+    <string name="err_registro_sin_conexion">You need a connection to create your account.</string>
+    <string name="err_sesion_no_devuelta">The server did not return the session.</string>
+    <string name="err_rol_requerido">That account does not have the %1$s role.</string>
+</resources>

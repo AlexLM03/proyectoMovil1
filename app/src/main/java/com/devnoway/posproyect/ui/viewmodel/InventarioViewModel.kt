@@ -1,5 +1,8 @@
 package com.devnoway.posproyect.ui.viewmodel
 
+import android.content.Context
+import com.devnoway.posproyect.R
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -22,7 +25,10 @@ import kotlinx.coroutines.launch
  * (son datos que el administrador comparte con el servidor); la lectura sale de
  * Room y por eso el inventario se consulta sin conexión.
  */
-class InventarioViewModel(private val insumoRepository: InsumoRepository) : ViewModel() {
+class InventarioViewModel(
+    private val contexto: Context,
+    private val insumoRepository: InsumoRepository
+) : ViewModel() {
 
     data class Estado(
         val insumos: List<Insumo> = emptyList(),
@@ -59,7 +65,7 @@ class InventarioViewModel(private val insumoRepository: InsumoRepository) : View
             _estado.update {
                 it.copy(
                     guardando = false,
-                    mensaje = (resultado as? Resultado.Fallo)?.mensaje
+                    mensaje = (resultado as? Resultado.Fallo)?.texto(contexto)
                 )
             }
         }
@@ -74,12 +80,15 @@ class InventarioViewModel(private val insumoRepository: InsumoRepository) : View
                 is Resultado.Exito -> _estado.update {
                     it.copy(
                         guardando = false,
-                        mensaje = "Insumo \"${resultado.datos.nombre}\" guardado."
+                        mensaje = contexto.getString(
+                            R.string.vm_insumo_guardado,
+                            resultado.datos.nombre
+                        )
                     )
                 }
 
                 is Resultado.Fallo -> _estado.update {
-                    it.copy(guardando = false, error = resultado.mensaje)
+                    it.copy(guardando = false, error = resultado.texto(contexto))
                 }
             }
         }
@@ -91,11 +100,11 @@ class InventarioViewModel(private val insumoRepository: InsumoRepository) : View
             _estado.update { it.copy(guardando = true, mensaje = null, error = null) }
             when (val resultado = insumoRepository.eliminar(id)) {
                 is Resultado.Exito -> _estado.update {
-                    it.copy(guardando = false, mensaje = "Insumo eliminado.")
+                    it.copy(guardando = false, mensaje = contexto.getString(R.string.vm_insumo_eliminado))
                 }
 
                 is Resultado.Fallo -> _estado.update {
-                    it.copy(guardando = false, error = resultado.mensaje)
+                    it.copy(guardando = false, error = resultado.texto(contexto))
                 }
             }
         }
@@ -107,7 +116,7 @@ class InventarioViewModel(private val insumoRepository: InsumoRepository) : View
 
     companion object {
         fun fabrica(contenedor: ContenedorApp): ViewModelProvider.Factory = viewModelFactory {
-            initializer { InventarioViewModel(contenedor.insumoRepository) }
+            initializer { InventarioViewModel(contenedor.contexto, contenedor.insumoRepository) }
         }
     }
 }

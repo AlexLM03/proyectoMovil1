@@ -1,5 +1,8 @@
 package com.devnoway.posproyect.ui.viewmodel
 
+import android.content.Context
+import com.devnoway.posproyect.R
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -27,6 +30,7 @@ import kotlinx.coroutines.launch
  * permite actualizar la bandeja cuando hay conexión.
  */
 class NotificacionesViewModel(
+    private val contexto: Context,
     private val sesionRepository: SesionRepository,
     private val notificacionRepository: NotificacionRepository
 ) : ViewModel() {
@@ -77,7 +81,7 @@ class NotificacionesViewModel(
             _estado.update {
                 it.copy(
                     cargando = false,
-                    mensaje = (resultado as? Resultado.Fallo)?.mensaje
+                    mensaje = (resultado as? Resultado.Fallo)?.texto(contexto)
                 )
             }
         }
@@ -92,7 +96,7 @@ class NotificacionesViewModel(
         if (pendientes.isEmpty()) return
         viewModelScope.launch {
             pendientes.forEach { aviso -> notificacionRepository.marcarLeida(aviso.id) }
-            _estado.update { it.copy(mensaje = "Marcaste ${pendientes.size} aviso(s) como leídos.") }
+            _estado.update { it.copy(mensaje = contexto.getString(R.string.vm_avisos_leidos, pendientes.size)) }
         }
     }
 
@@ -104,6 +108,7 @@ class NotificacionesViewModel(
         fun fabrica(contenedor: ContenedorApp): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 NotificacionesViewModel(
+                    contexto = contenedor.contexto,
                     sesionRepository = contenedor.sesionRepository,
                     notificacionRepository = contenedor.notificacionRepository
                 )

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Mensajes de error y validación que redacta la propia app
+  (repositorios y capa de red). Los mensajes que devuelve la Web API se
+  muestran tal cual llegan del servidor.
+-->
+<resources>
+    <!-- Capa de red (Resultado / ejecutarRed) -->
+    <string name="err_sesion_expirada">Tu sesión expiró. Vuelve a iniciar sesión.</string>
+    <string name="err_sin_permiso">No tienes permiso para esta acción.</string>
+    <string name="err_no_existe">El recurso no existe en el servidor.</string>
+    <string name="err_conflicto">El servidor rechazó el cambio por un conflicto de estado.</string>
+    <string name="err_servidor_codigo">El servidor respondió con error %1$d.</string>
+    <string name="err_sin_conexion">Sin conexión con el servidor. Revisa tu red e intenta de nuevo.</string>
+    <string name="err_inesperado">Ocurrió un error inesperado.</string>
+
+    <!-- Catálogo -->
+    <string name="err_catalogo_sin_conexion">Sin conexión con el servidor.</string>
+    <string name="err_catalogo_guardado">Sin conexión: se muestra el catálogo guardado.</string>
+    <string name="err_producto_no_existe">El producto %1$d no existe en el servidor.</string>
+
+    <!-- Direcciones -->
+    <string name="err_dir_sin_conexion_lista">Sin conexión: se muestran las direcciones guardadas.</string>
+    <string name="err_dir_campos">Escribe un alias y la dirección.</string>
+    <string name="err_dir_guardar_sin_conexion">Necesitas conexión para guardar una dirección.</string>
+    <string name="err_dir_eliminar_sin_conexion">Necesitas conexión para eliminar una dirección.</string>
+    <string name="err_dir_eliminar_servidor">El servidor no permitió eliminar la dirección.</string>
+
+    <!-- Inventario -->
+    <string name="err_insumo_sin_conexion_lista">Sin conexión: se muestra el inventario guardado.</string>
+    <string name="err_insumo_campos">El nombre y la unidad son obligatorios.</string>
+    <string name="err_insumo_negativos">Las existencias y el mínimo no pueden ser negativos.</string>
+    <string name="err_insumo_modificar_sin_conexion">Necesitas conexión para modificar el inventario.</string>
+    <string name="err_insumo_no_devuelto">El servidor no devolvió el insumo guardado.</string>
+    <string name="err_insumo_eliminar_sin_conexion">Necesitas conexión para eliminar un insumo.</string>
+    <string name="err_insumo_eliminar_servidor">El servidor no permitió eliminar el insumo.</string>
+
+    <!-- Notificaciones -->
+    <string name="err_avisos_sin_conexion">Sin conexión: se muestran los avisos guardados.</string>
+
+    <!-- Pedidos -->
+    <string name="err_carrito_vacio">Agrega al menos un producto al carrito.</string>
+    <string name="err_pedidos_cola">Sin conexión: los pedidos se enviarán cuando vuelva la red.</string>
+    <string name="err_pedido_en_cola">Sin conexión: el pedido sigue guardado en el teléfono.</string>
+    <string name="err_pedido_no_local">El pedido %1$s no existe en el teléfono.</string>
+    <string name="err_pedido_estado_sin_conexion">Necesitas conexión para cambiar el estado de un pedido enviado.</string>
+    <string name="err_pedido_no_actualizado">El servidor no devolvió el pedido actualizado.</string>
+    <string name="err_pedido_cancelar_sin_conexion">Necesitas conexión para cancelar el pedido.</string>
+    <string name="err_pedido_no_cancelado">El servidor no devolvió el pedido cancelado.</string>
+    <string name="err_pedido_ultimo_estado">Sin conexión: se muestra el último estado guardado.</string>
+    <string name="err_pedido_no_servidor">El pedido %1$s no existe en el servidor.</string>
+    <string name="err_pedido_datos_guardados">Sin conexión: se muestran los datos guardados.</string>
+    <string name="err_resumen_no_devuelto">El servidor no devolvió el resumen.</string>
+    <string name="err_pedido_ya_no_local">El pedido %1$s ya no está en el teléfono.</string>
+    <string name="err_pedido_sin_productos">El pedido %1$s no tiene productos.</string>
+    <string name="err_pedido_no_confirmado">El servidor no confirmó el pedido.</string>
+
+    <!-- Sesión y registro -->
+    <string name="err_metodo_pago_sin_conexion">Necesitas conexión para cambiar tu método de pago.</string>
+    <string name="err_perfil_no_devuelto">El servidor no devolvió el perfil actualizado.</string>
+    <string name="err_login_campos">Escribe tu correo y tu contraseña.</string>
+    <string name="err_login_sin_conexion">Necesitas conexión para iniciar sesión. Tus datos locales siguen disponibles.</string>
+    <string name="err_registro_campos">Completa todos los campos del registro.</string>
+    <string name="err_correo_invalido">Escribe un correo electrónico válido.</string>
+    <string name="err_password_corta">La contraseña debe tener al menos 6 caracteres.</string>
+    <string name="err_registro_sin_conexion">Necesitas conexión para crear tu cuenta.</string>
+    <string name="err_sesion_no_devuelta">El servidor no devolvió la sesión.</string>
+    <string name="err_rol_requerido">Esa cuenta no tiene el rol de %1$s.</string>
+</resources>

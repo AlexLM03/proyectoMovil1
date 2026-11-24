@@ -1,5 +1,8 @@
 package com.devnoway.posproyect.ui.viewmodel
 
+import android.content.Context
+import com.devnoway.posproyect.R
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -20,6 +23,7 @@ import kotlinx.coroutines.launch
 
 /** ViewModel del perfil del cliente: sus datos, su historial y sus avisos. */
 class PerfilViewModel(
+    private val contexto: Context,
     private val sesionRepository: SesionRepository,
     private val pedidoRepository: PedidoRepository,
     private val notificacionRepository: NotificacionRepository
@@ -67,7 +71,7 @@ class PerfilViewModel(
         val usuario = _estado.value.usuario
         if (usuario == null) {
             _estado.update {
-                it.copy(mensaje = "Inicia sesión para sincronizar tu historial de pedidos.")
+                it.copy(mensaje = contexto.getString(R.string.vm_perfil_sin_sesion))
             }
             return
         }
@@ -81,7 +85,7 @@ class PerfilViewModel(
             _estado.update {
                 it.copy(
                     sincronizando = false,
-                    mensaje = (resultado as? Resultado.Fallo)?.mensaje
+                    mensaje = (resultado as? Resultado.Fallo)?.texto(contexto)
                 )
             }
         }
@@ -97,6 +101,7 @@ class PerfilViewModel(
         fun fabrica(contenedor: ContenedorApp): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 PerfilViewModel(
+                    contexto = contenedor.contexto,
                     sesionRepository = contenedor.sesionRepository,
                     pedidoRepository = contenedor.pedidoRepository,
                     notificacionRepository = contenedor.notificacionRepository

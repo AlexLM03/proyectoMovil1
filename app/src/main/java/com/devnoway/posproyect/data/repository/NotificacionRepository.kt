@@ -1,5 +1,6 @@
 package com.devnoway.posproyect.data.repository
 
+import com.devnoway.posproyect.R
 import com.devnoway.posproyect.data.conectividad.ObservadorConectividad
 import com.devnoway.posproyect.data.local.daos.NotificacionDao
 import com.devnoway.posproyect.data.mapeadores.aEntidad
@@ -32,7 +33,7 @@ class NotificacionRepository(
 
     suspend fun sincronizar(clienteId: Int?): Resultado<Int> {
         if (!conectividad.estaEnLinea()) {
-            return Resultado.Fallo("Sin conexión: se muestran los avisos guardados.")
+            return Resultado.Fallo(R.string.err_avisos_sin_conexion)
         }
         return ejecutarRed {
             val notificaciones = api.notificaciones(clienteId).notificaciones.orEmpty()

@@ -1,5 +1,8 @@
 package com.devnoway.posproyect.ui.viewmodel
 
+import android.content.Context
+import com.devnoway.posproyect.R
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -24,6 +27,7 @@ import kotlinx.coroutines.launch
  * carrito compartido.
  */
 class DetalleProductoViewModel(
+    private val contexto: Context,
     private val catalogoRepository: CatalogoRepository,
     private val carritoRepository: CarritoRepository,
     private val productoId: Int
@@ -47,7 +51,7 @@ class DetalleProductoViewModel(
         viewModelScope.launch {
             val resultado = catalogoRepository.refrescarProducto(productoId)
             if (resultado is Resultado.Fallo) {
-                _estado.update { it.copy(mensaje = resultado.mensaje) }
+                _estado.update { it.copy(mensaje = resultado.texto(contexto)) }
             }
         }
     }
@@ -66,6 +70,7 @@ class DetalleProductoViewModel(
             viewModelFactory {
                 initializer {
                     DetalleProductoViewModel(
+                        contexto = contenedor.contexto,
                         catalogoRepository = contenedor.catalogoRepository,
                         carritoRepository = contenedor.carritoRepository,
                         productoId = productoId

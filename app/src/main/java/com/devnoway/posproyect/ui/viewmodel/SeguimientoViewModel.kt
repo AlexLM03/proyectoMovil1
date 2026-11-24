@@ -1,5 +1,8 @@
 package com.devnoway.posproyect.ui.viewmodel
 
+import android.content.Context
+import com.devnoway.posproyect.R
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -21,7 +24,10 @@ import kotlinx.coroutines.launch
  * Observa el pedido más reciente guardado y permite refrescarlo contra el
  * servidor o reintentar el envío si se creó sin conexión.
  */
-class SeguimientoViewModel(private val pedidoRepository: PedidoRepository) : ViewModel() {
+class SeguimientoViewModel(
+    private val contexto: Context,
+    private val pedidoRepository: PedidoRepository
+) : ViewModel() {
 
     data class Estado(
         val pedido: Pedido? = null,
@@ -60,7 +66,7 @@ class SeguimientoViewModel(private val pedidoRepository: PedidoRepository) : Vie
             _estado.update {
                 it.copy(
                     actualizando = false,
-                    mensaje = (resultado as? Resultado.Fallo)?.mensaje
+                    mensaje = (resultado as? Resultado.Fallo)?.texto(contexto)
                 )
             }
         }
@@ -72,7 +78,7 @@ class SeguimientoViewModel(private val pedidoRepository: PedidoRepository) : Vie
 
     companion object {
         fun fabrica(contenedor: ContenedorApp): ViewModelProvider.Factory = viewModelFactory {
-            initializer { SeguimientoViewModel(contenedor.pedidoRepository) }
+            initializer { SeguimientoViewModel(contenedor.contexto, contenedor.pedidoRepository) }
         }
     }
 }

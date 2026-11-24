@@ -1,5 +1,6 @@
 package com.devnoway.posproyect.data.repository
 
+import com.devnoway.posproyect.R
 import com.devnoway.posproyect.data.conectividad.ObservadorConectividad
 import com.devnoway.posproyect.data.local.daos.InsumoDao
 import com.devnoway.posproyect.data.mapeadores.aEntidad
@@ -7,6 +8,7 @@ import com.devnoway.posproyect.data.mapeadores.aModelo
 import com.devnoway.posproyect.data.mapeadores.aSolicitud
 import com.devnoway.posproyect.data.modelo.Insumo
 import com.devnoway.posproyect.data.remote.ApiServicio
+import com.devnoway.posproyect.data.remote.ErrorLocalizado
 import com.devnoway.posproyect.data.remote.Resultado
 import com.devnoway.posproyect.data.remote.ejecutarRed
 import kotlinx.coroutines.flow.Flow
@@ -36,7 +38,7 @@ class InsumoRepository(
     /** Descarga el inventario completo y reemplaza la copia local. */
     suspend fun sincronizar(): Resultado<Int> {
         if (!conectividad.estaEnLinea()) {
-            return Resultado.Fallo("Sin conexión: se muestra el inventario guardado.")
+            return Resultado.Fallo(R.string.err_insumo_sin_conexion_lista)
         }
         return ejecutarRed {
             val insumosDto = api.insumos().insumos.orEmpty()
@@ -49,13 +51,13 @@ class InsumoRepository(
     /** Crea (id = 0) o actualiza (id > 0) un insumo. */
     suspend fun guardar(insumo: Insumo): Resultado<Insumo> {
         if (insumo.nombre.isBlank() || insumo.unidad.isBlank()) {
-            return Resultado.Fallo("El nombre y la unidad son obligatorios.")
+            return Resultado.Fallo(R.string.err_insumo_campos)
         }
         if (insumo.stock < 0 || insumo.minimo < 0) {
-            return Resultado.Fallo("Las existencias y el mínimo no pueden ser negativos.")
+            return Resultado.Fallo(R.string.err_insumo_negativos)
         }
         if (!conectividad.estaEnLinea()) {
-            return Resultado.Fallo("Necesitas conexión para modificar el inventario.")
+            return Resultado.Fallo(R.string.err_insumo_modificar_sin_conexion)
         }
         return ejecutarRed {
             val respuesta = if (insumo.id == 0) {
@@ -64,7 +66,7 @@ class InsumoRepository(
                 api.actualizarInsumo(insumo.id, insumo.aSolicitud())
             }
             val dto = respuesta.insumo
-                ?: throw IllegalStateException("El servidor no devolvió el insumo guardado.")
+                ?: throw ErrorLocalizado(R.string.err_insumo_no_devuelto)
             val entidad = dto.aEntidad()
             insumoDao.guardarInsumo(entidad)
             entidad.aModelo()
@@ -73,14 +75,14 @@ class InsumoRepository(
 
     suspend fun eliminar(id: Int): Resultado<Unit> {
         if (!conectividad.estaEnLinea()) {
-            return Resultado.Fallo("Necesitas conexión para eliminar un insumo.")
+            return Resultado.Fallo(R.string.err_insumo_eliminar_sin_conexion)
         }
         return ejecutarRed {
             val respuesta = api.eliminarInsumo(id)
             if (!respuesta.ok) {
-                throw IllegalStateException(
-                    respuesta.error?.mensaje ?: "El servidor no permitió eliminar el insumo."
-                )
+                val delServidor = respuesta.error?.mensaje
+                if (delServidor != null) throw IllegalStateException(delServidor)
+                throw ErrorLocalizado(R.string.err_insumo_eliminar_servidor)
             }
             insumoDao.borrarInsumo(id)
         }

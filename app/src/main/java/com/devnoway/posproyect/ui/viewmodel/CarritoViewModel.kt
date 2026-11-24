@@ -1,5 +1,8 @@
 package com.devnoway.posproyect.ui.viewmodel
 
+import android.content.Context
+import com.devnoway.posproyect.R
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -27,6 +30,7 @@ import kotlinx.coroutines.launch
  * el pedido queda pendiente y el seguimiento lo muestra así: nunca se pierde.
  */
 class CarritoViewModel(
+    private val contexto: Context,
     private val carritoRepository: CarritoRepository,
     private val pedidoRepository: PedidoRepository,
     private val sesionRepository: SesionRepository,
@@ -110,7 +114,7 @@ class CarritoViewModel(
         val actual = _estado.value
         if (actual.confirmando || actual.vacio) return
         if (actual.aDomicilio && actual.direccion.isBlank()) {
-            _estado.update { it.copy(error = "Escribe la dirección de entrega.") }
+            _estado.update { it.copy(error = contexto.getString(R.string.vm_carrito_direccion)) }
             return
         }
 
@@ -134,7 +138,7 @@ class CarritoViewModel(
                 }
 
                 is Resultado.Fallo -> _estado.update {
-                    it.copy(confirmando = false, error = resultado.mensaje)
+                    it.copy(confirmando = false, error = resultado.texto(contexto))
                 }
             }
         }
@@ -144,6 +148,7 @@ class CarritoViewModel(
         fun fabrica(contenedor: ContenedorApp): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 CarritoViewModel(
+                    contexto = contenedor.contexto,
                     carritoRepository = contenedor.carritoRepository,
                     pedidoRepository = contenedor.pedidoRepository,
                     sesionRepository = contenedor.sesionRepository,

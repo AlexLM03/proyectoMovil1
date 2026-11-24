@@ -1,5 +1,9 @@
 package com.devnoway.posproyect.ui.viewmodel
 
+import android.content.Context
+import com.devnoway.posproyect.R
+import com.devnoway.posproyect.ui.etiquetaRes
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -23,7 +27,10 @@ import kotlinx.coroutines.launch
  * propondrá al confirmar el pedido (efectivo, terminal o transferencia) y se
  * guarda en el perfil del servidor.
  */
-class MetodosPagoViewModel(private val sesionRepository: SesionRepository) : ViewModel() {
+class MetodosPagoViewModel(
+    private val contexto: Context,
+    private val sesionRepository: SesionRepository
+) : ViewModel() {
 
     data class Estado(
         val usuario: Usuario? = null,
@@ -54,12 +61,15 @@ class MetodosPagoViewModel(private val sesionRepository: SesionRepository) : Vie
                 is Resultado.Exito -> _estado.update {
                     it.copy(
                         guardando = false,
-                        mensaje = "Método de pago: ${metodo.etiqueta}."
+                        mensaje = contexto.getString(
+                            R.string.vm_metodo_pago,
+                            contexto.getString(metodo.etiquetaRes)
+                        )
                     )
                 }
 
                 is Resultado.Fallo -> _estado.update {
-                    it.copy(guardando = false, error = resultado.mensaje)
+                    it.copy(guardando = false, error = resultado.texto(contexto))
                 }
             }
         }
@@ -71,7 +81,7 @@ class MetodosPagoViewModel(private val sesionRepository: SesionRepository) : Vie
 
     companion object {
         fun fabrica(contenedor: ContenedorApp): ViewModelProvider.Factory = viewModelFactory {
-            initializer { MetodosPagoViewModel(contenedor.sesionRepository) }
+            initializer { MetodosPagoViewModel(contenedor.contexto, contenedor.sesionRepository) }
         }
     }
 }

@@ -1,5 +1,8 @@
 package com.devnoway.posproyect.ui.viewmodel
 
+import android.content.Context
+import com.devnoway.posproyect.R
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -23,7 +26,10 @@ import kotlinx.coroutines.launch
  * traer la versión del servidor. El filtro por categoría y la búsqueda se
  * resuelven en memoria sobre los productos ya guardados.
  */
-class CatalogoViewModel(private val catalogoRepository: CatalogoRepository) : ViewModel() {
+class CatalogoViewModel(
+    private val contexto: Context,
+    private val catalogoRepository: CatalogoRepository
+) : ViewModel() {
 
     data class Estado(
         val categorias: List<Categoria> = emptyList(),
@@ -91,7 +97,7 @@ class CatalogoViewModel(private val catalogoRepository: CatalogoRepository) : Vi
             _estado.update {
                 it.copy(
                     sincronizando = false,
-                    mensaje = (resultado as? Resultado.Fallo)?.mensaje
+                    mensaje = (resultado as? Resultado.Fallo)?.texto(contexto)
                 )
             }
         }
@@ -99,7 +105,7 @@ class CatalogoViewModel(private val catalogoRepository: CatalogoRepository) : Vi
 
     companion object {
         fun fabrica(contenedor: ContenedorApp): ViewModelProvider.Factory = viewModelFactory {
-            initializer { CatalogoViewModel(contenedor.catalogoRepository) }
+            initializer { CatalogoViewModel(contenedor.contexto, contenedor.catalogoRepository) }
         }
     }
 }

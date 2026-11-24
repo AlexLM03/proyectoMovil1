@@ -1,5 +1,8 @@
 package com.devnoway.posproyect.ui.viewmodel
 
+import android.content.Context
+import com.devnoway.posproyect.R
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -34,6 +37,7 @@ import kotlinx.coroutines.launch
  * Lo usan tanto el panel principal como el dash administrativo.
  */
 class AdminResumenViewModel(
+    private val contexto: Context,
     private val pedidoRepository: PedidoRepository,
     private val insumoRepository: InsumoRepository,
     sesionRepository: SesionRepository
@@ -96,8 +100,8 @@ class AdminResumenViewModel(
                 resumenRemoto = remoto.datos
                 recalcular()
             }
-            val fallo = (pedidos as? Resultado.Fallo)?.mensaje
-                ?: (insumos as? Resultado.Fallo)?.mensaje
+            val fallo = (pedidos as? Resultado.Fallo)?.texto(contexto)
+                ?: (insumos as? Resultado.Fallo)?.texto(contexto)
             _estado.update { it.copy(sincronizando = false, mensaje = fallo) }
         }
     }
@@ -136,6 +140,7 @@ class AdminResumenViewModel(
         fun fabrica(contenedor: ContenedorApp): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 AdminResumenViewModel(
+                    contexto = contenedor.contexto,
                     pedidoRepository = contenedor.pedidoRepository,
                     insumoRepository = contenedor.insumoRepository,
                     sesionRepository = contenedor.sesionRepository

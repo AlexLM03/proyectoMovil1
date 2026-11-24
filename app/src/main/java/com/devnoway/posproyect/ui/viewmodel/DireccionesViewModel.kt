@@ -1,5 +1,8 @@
 package com.devnoway.posproyect.ui.viewmodel
 
+import android.content.Context
+import com.devnoway.posproyect.R
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -27,6 +30,7 @@ import kotlinx.coroutines.launch
  * sale de Room (se consulta sin conexión) y las escrituras van a la API.
  */
 class DireccionesViewModel(
+    private val contexto: Context,
     private val sesionRepository: SesionRepository,
     private val direccionRepository: DireccionRepository
 ) : ViewModel() {
@@ -71,7 +75,7 @@ class DireccionesViewModel(
             _estado.update {
                 it.copy(
                     cargando = false,
-                    mensaje = (resultado as? Resultado.Fallo)?.mensaje
+                    mensaje = (resultado as? Resultado.Fallo)?.texto(contexto)
                 )
             }
         }
@@ -84,11 +88,11 @@ class DireccionesViewModel(
             _estado.update { it.copy(trabajando = true, mensaje = null, error = null) }
             when (val resultado = direccionRepository.guardar(usuario.id, direccion)) {
                 is Resultado.Exito -> _estado.update {
-                    it.copy(trabajando = false, mensaje = "Dirección guardada.")
+                    it.copy(trabajando = false, mensaje = contexto.getString(R.string.vm_direccion_guardada))
                 }
 
                 is Resultado.Fallo -> _estado.update {
-                    it.copy(trabajando = false, error = resultado.mensaje)
+                    it.copy(trabajando = false, error = resultado.texto(contexto))
                 }
             }
         }
@@ -106,11 +110,11 @@ class DireccionesViewModel(
             _estado.update { it.copy(trabajando = true, mensaje = null, error = null) }
             when (val resultado = direccionRepository.eliminar(usuario.id, id)) {
                 is Resultado.Exito -> _estado.update {
-                    it.copy(trabajando = false, mensaje = "Dirección eliminada.")
+                    it.copy(trabajando = false, mensaje = contexto.getString(R.string.vm_direccion_eliminada))
                 }
 
                 is Resultado.Fallo -> _estado.update {
-                    it.copy(trabajando = false, error = resultado.mensaje)
+                    it.copy(trabajando = false, error = resultado.texto(contexto))
                 }
             }
         }
@@ -124,6 +128,7 @@ class DireccionesViewModel(
         fun fabrica(contenedor: ContenedorApp): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 DireccionesViewModel(
+                    contexto = contenedor.contexto,
                     sesionRepository = contenedor.sesionRepository,
                     direccionRepository = contenedor.direccionRepository
                 )

@@ -1,6 +1,7 @@
 package com.devnoway.posproyect.data.repository
 
 import androidx.room.withTransaction
+import com.devnoway.posproyect.R
 import com.devnoway.posproyect.data.conectividad.ObservadorConectividad
 import com.devnoway.posproyect.data.local.AcambapanDatabase
 import com.devnoway.posproyect.data.local.daos.PedidoDao
@@ -15,6 +16,7 @@ import com.devnoway.posproyect.data.modelo.Pedido
 import com.devnoway.posproyect.data.modelo.ResumenNegocio
 import com.devnoway.posproyect.data.modelo.enPesos
 import com.devnoway.posproyect.data.remote.ApiServicio
+import com.devnoway.posproyect.data.remote.ErrorLocalizado
 import com.devnoway.posproyect.data.remote.Resultado
 import com.devnoway.posproyect.data.remote.dto.CrearPedidoSolicitud
 import com.devnoway.posproyect.data.remote.dto.EstadoSolicitud
@@ -65,7 +67,7 @@ class PedidoRepository(
      */
     suspend fun crear(nuevo: NuevoPedido): Resultado<String> {
         if (nuevo.lineas.isEmpty()) {
-            return Resultado.Fallo("Agrega al menos un producto al carrito.")
+            return Resultado.Fallo(R.string.err_carrito_vacio)
         }
         val folio = "APP-" + System.currentTimeMillis().toString(36).uppercase(Locale.US)
         val subtotal = nuevo.lineas.sumOf { it.subtotal }
@@ -120,7 +122,7 @@ class PedidoRepository(
     /** Reintenta enviar los pedidos creados sin conexión y refresca los existentes. */
     suspend fun sincronizar(clienteId: Int?, esAdmin: Boolean): Resultado<Int> {
         if (!conectividad.estaEnLinea()) {
-            return Resultado.Fallo("Sin conexión: los pedidos se enviarán cuando vuelva la red.")
+            return Resultado.Fallo(R.string.err_pedidos_cola)
         }
         return ejecutarRed {
             var enviados = 0
@@ -137,7 +139,7 @@ class PedidoRepository(
     /** Fuerza el envío de un pedido pendiente (botón "Reintentar" del seguimiento). */
     suspend fun enviarPendiente(folio: String): Resultado<Unit> {
         if (!conectividad.estaEnLinea()) {
-            return Resultado.Fallo("Sin conexión: el pedido sigue guardado en el teléfono.")
+            return Resultado.Fallo(R.string.err_pedido_en_cola)
         }
         return empujarPedido(folio)
     }
@@ -145,14 +147,14 @@ class PedidoRepository(
     /** Cambia el estado de un pedido y lo refleja en el servidor (requiere red). */
     suspend fun cambiarEstado(folio: String, estado: EstadoPedido): Resultado<Unit> {
         val local = pedidoDao.buscarPedido(folio)
-            ?: return Resultado.Fallo("El pedido $folio no existe en el teléfono.")
+            ?: return Resultado.Fallo(R.string.err_pedido_no_local, folio)
 
         if (local.pendienteSincronizar) {
             pedidoDao.actualizarEstado(folio, estado.codigo)
             return Resultado.Exito(Unit)
         }
         if (!conectividad.estaEnLinea()) {
-            return Resultado.Fallo("Necesitas conexión para cambiar el estado de un pedido enviado.")
+            return Resultado.Fallo(R.string.err_pedido_estado_sin_conexion)
         }
         return ejecutarRed {
             val respuesta = api.cambiarEstadoPedido(
@@ -163,7 +165,7 @@ class PedidoRepository(
                 )
             )
             val pedido = respuesta.pedido
-                ?: throw IllegalStateException("El servidor no devolvió el pedido actualizado.")
+                ?: throw ErrorLocalizado(R.string.err_pedido_no_actualizado)
             guardarDesdeServidor(pedido)
         }
     }
@@ -171,12 +173,12 @@ class PedidoRepository(
     /** Cancela un pedido (el servidor lo marca CANCELADO, no lo borra). */
     suspend fun cancelar(folio: String): Resultado<Unit> {
         if (!conectividad.estaEnLinea()) {
-            return Resultado.Fallo("Necesitas conexión para cancelar el pedido.")
+            return Resultado.Fallo(R.string.err_pedido_cancelar_sin_conexion)
         }
         return ejecutarRed {
             val respuesta = api.cancelarPedido(folio)
             val pedido = respuesta.pedido
-                ?: throw IllegalStateException("El servidor no devolvió el pedido cancelado.")
+                ?: throw ErrorLocalizado(R.string.err_pedido_no_cancelado)
             guardarDesdeServidor(pedido)
         }
     }
@@ -184,12 +186,12 @@ class PedidoRepository(
     /** Trae un pedido concreto del servidor (seguimiento casi en tiempo real). */
     suspend fun refrescar(folio: String): Resultado<Unit> {
         if (!conectividad.estaEnLinea()) {
-            return Resultado.Fallo("Sin conexión: se muestra el último estado guardado.")
+            return Resultado.Fallo(R.string.err_pedido_ultimo_estado)
         }
         return ejecutarRed {
             val respuesta = api.pedido(folio)
             val pedido = respuesta.pedido
-                ?: throw IllegalStateException("El pedido $folio no existe en el servidor.")
+                ?: throw ErrorLocalizado(R.string.err_pedido_no_servidor, folio)
             guardarDesdeServidor(pedido)
         }
     }
@@ -202,11 +204,11 @@ class PedidoRepository(
      */
     suspend fun resumenServidor(): Resultado<ResumenNegocio> {
         if (!conectividad.estaEnLinea()) {
-            return Resultado.Fallo("Sin conexión: se muestran los datos guardados.")
+            return Resultado.Fallo(R.string.err_pedido_datos_guardados)
         }
         return ejecutarRed {
             val resumen = api.resumen().resumen
-                ?: throw IllegalStateException("El servidor no devolvió el resumen.")
+                ?: throw ErrorLocalizado(R.string.err_resumen_no_devuelto)
             ResumenNegocio(
                 pedidosHoy = resumen.pedidosHoy,
                 ventasHoy = resumen.ventasHoy,
@@ -218,10 +220,10 @@ class PedidoRepository(
 
     private suspend fun empujarPedido(folio: String): Resultado<Unit> {
         val entidad = pedidoDao.buscarPedido(folio)
-            ?: return Resultado.Fallo("El pedido $folio ya no está en el teléfono.")
+            ?: return Resultado.Fallo(R.string.err_pedido_ya_no_local, folio)
         val detalles = pedidoDao.detallesDe(folio)
         if (detalles.isEmpty()) {
-            return Resultado.Fallo("El pedido $folio no tiene productos.")
+            return Resultado.Fallo(R.string.err_pedido_sin_productos, folio)
         }
 
         val solicitud = CrearPedidoSolicitud(
@@ -248,7 +250,7 @@ class PedidoRepository(
         return ejecutarRed {
             val respuesta = api.crearPedido(solicitud)
             val pedido = respuesta.pedido
-                ?: throw IllegalStateException("El servidor no confirmó el pedido.")
+                ?: throw ErrorLocalizado(R.string.err_pedido_no_confirmado)
             guardarDesdeServidor(pedido)
         }
     }
