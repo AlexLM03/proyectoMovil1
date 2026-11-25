@@ -13,10 +13,12 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
@@ -29,6 +31,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -57,6 +61,8 @@ import com.devnoway.posproyect.R
 import com.devnoway.posproyect.data.modelo.Producto
 import com.devnoway.posproyect.data.modelo.enPesos
 import com.devnoway.posproyect.navigation.Rutas
+import com.devnoway.posproyect.ui.adaptativo.ClaseVentana
+import com.devnoway.posproyect.ui.adaptativo.LocalClaseVentana
 import androidx.annotation.StringRes
 import androidx.compose.foundation.shape.CircleShape
 import com.devnoway.posproyect.ui.theme.RojoAlerta
@@ -362,7 +368,86 @@ private fun BarraInferior(
     }
 }
 
-/** Marco de las pantallas del cliente: barra superior + barra inferior de navegacion. */
+/**
+ * Riel de navegación para tabletas y ventanas grandes.
+ *
+ * Sustituye a la barra inferior cuando la clase de ventana es MEDIANA o
+ * EXPANDIDA: el mismo destino, pero a un costado, que es lo que aprovecha el
+ * ancho extra en lugar de gastar alto de pantalla.
+ */
+@Composable
+private fun BarraLateral(
+    destinos: List<DestinoBarra>,
+    rutaActual: String,
+    onNavegar: (String) -> Unit
+) {
+    NavigationRail(containerColor = MaterialTheme.colorScheme.surfaceVariant) {
+        Spacer(Modifier.height(12.dp))
+        destinos.forEach { destino ->
+            NavigationRailItem(
+                selected = rutaActual == destino.ruta,
+                onClick = { onNavegar(destino.ruta) },
+                icon = { Text(text = destino.emoji, fontSize = 22.sp) },
+                label = { Text(stringResource(destino.etiqueta), maxLines = 1) }
+            )
+        }
+    }
+}
+
+/** Marco adaptable: barra inferior en teléfono, riel lateral en pantalla grande. */
+@Composable
+private fun MarcoAdaptable(
+    titulo: String,
+    rutaActual: String,
+    onNavegar: (String) -> Unit,
+    destinos: List<DestinoBarra>,
+    modifier: Modifier = Modifier,
+    onAtras: (() -> Unit)? = null,
+    acciones: @Composable RowScope.() -> Unit = {},
+    contenido: @Composable ColumnScope.() -> Unit
+) {
+    val clase = LocalClaseVentana.current
+    val anchoMaximo = clase.anchoMaximoContenido
+
+    Scaffold(
+        modifier = modifier,
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = { BarraSuperior(titulo = titulo, onAtras = onAtras, acciones = acciones) },
+        bottomBar = {
+            if (!clase.usaNavegacionLateral) {
+                BarraInferior(destinos, rutaActual, onNavegar)
+            }
+        }
+    ) { padding ->
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
+            if (clase.usaNavegacionLateral) {
+                BarraLateral(destinos, rutaActual, onNavegar)
+            }
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
+                contentAlignment = Alignment.TopCenter
+            ) {
+                Column(
+                    modifier = Modifier
+                        .then(
+                            if (anchoMaximo == Dp.Unspecified) Modifier
+                            else Modifier.widthIn(max = anchoMaximo)
+                        )
+                        .fillMaxHeight(),
+                    content = contenido
+                )
+            }
+        }
+    }
+}
+
+/** Marco de las pantallas del cliente: adaptable al tamaño de la ventana. */
 @Composable
 fun MarcoCliente(
     titulo: String,
@@ -373,22 +458,19 @@ fun MarcoCliente(
     acciones: @Composable RowScope.() -> Unit = {},
     contenido: @Composable ColumnScope.() -> Unit
 ) {
-    Scaffold(
+    MarcoAdaptable(
+        titulo = titulo,
+        rutaActual = rutaActual,
+        onNavegar = onNavegar,
+        destinos = destinosCliente,
         modifier = modifier,
-        containerColor = MaterialTheme.colorScheme.background,
-        topBar = { BarraSuperior(titulo = titulo, onAtras = onAtras, acciones = acciones) },
-        bottomBar = { BarraInferior(destinosCliente, rutaActual, onNavegar) }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
-            content = contenido
-        )
-    }
+        onAtras = onAtras,
+        acciones = acciones,
+        contenido = contenido
+    )
 }
 
-/** Marco de las pantallas del administrador. */
+/** Marco de las pantallas del administrador: adaptable al tamaño de la ventana. */
 @Composable
 fun MarcoAdmin(
     titulo: String,
@@ -399,19 +481,16 @@ fun MarcoAdmin(
     acciones: @Composable RowScope.() -> Unit = {},
     contenido: @Composable ColumnScope.() -> Unit
 ) {
-    Scaffold(
+    MarcoAdaptable(
+        titulo = titulo,
+        rutaActual = rutaActual,
+        onNavegar = onNavegar,
+        destinos = destinosAdmin,
         modifier = modifier,
-        containerColor = MaterialTheme.colorScheme.background,
-        topBar = { BarraSuperior(titulo = titulo, onAtras = onAtras, acciones = acciones) },
-        bottomBar = { BarraInferior(destinosAdmin, rutaActual, onNavegar) }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
-            content = contenido
-        )
-    }
+        onAtras = onAtras,
+        acciones = acciones,
+        contenido = contenido
+    )
 }
 
 // ---------------------------------------------------------------------------

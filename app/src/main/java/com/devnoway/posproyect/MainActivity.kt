@@ -4,7 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
 import com.devnoway.posproyect.navigation.AcambapanApp
+import com.devnoway.posproyect.ui.adaptativo.ProveedorClaseVentana
 import com.devnoway.posproyect.ui.theme.AcambapanTheme
 
 /**
@@ -23,7 +26,11 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             AcambapanTheme {
-                AcambapanApp(contenedor = contenedor)
+                // Mide la ventana una sola vez y publica la clase de tamaño
+                // (compacta / mediana / expandida) para toda la app.
+                ProveedorClaseVentana(modifier = Modifier.fillMaxSize()) {
+                    AcambapanApp(contenedor = contenedor)
+                }
             }
         }
     }
