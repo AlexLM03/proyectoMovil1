@@ -127,6 +127,39 @@ fun DetalleProductoScreen(
                 textAlign = TextAlign.Center
             )
 
+            // Horneada del día: el dato ya venía de la API pero no se mostraba.
+            estado.tanda?.let { tanda ->
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+                ) {
+                    Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)) {
+                        Text(
+                            text = stringResource(R.string.det_tanda_titulo),
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(bottom = 4.dp)
+                        )
+                        FilaDato(
+                            etiqueta = stringResource(R.string.det_tanda_hora_etiqueta),
+                            valor = stringResource(
+                                R.string.det_tanda_hora,
+                                tanda.horaSalida.take(5)
+                            )
+                        )
+                        FilaDato(
+                            etiqueta = stringResource(R.string.det_tanda_piezas_etiqueta),
+                            valor = stringResource(
+                                R.string.det_tanda_piezas,
+                                tanda.piezasDisponibles
+                            )
+                        )
+                    }
+                }
+            }
+
             Spacer(Modifier.height(8.dp))
             Text(
                 text = stringResource(R.string.det_cantidad),

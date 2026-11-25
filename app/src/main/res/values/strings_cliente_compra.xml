@@ -29,6 +29,11 @@
     <string name="det_disponibilidad">Disponibilidad</string>
     <string name="det_disponible_hoy">Disponible hoy</string>
     <string name="det_agotado">Agotado</string>
+    <string name="det_tanda_titulo">Próxima horneada</string>
+    <string name="det_tanda_hora_etiqueta">Hora de salida</string>
+    <string name="det_tanda_hora">Sale a las %1$s</string>
+    <string name="det_tanda_piezas_etiqueta">Piezas disponibles</string>
+    <string name="det_tanda_piezas">%1$d piezas</string>
     <string name="cat_agotado">Agotado</string>
     <string name="cat_contador_filtrado">%1$d de %2$d artículos</string>
     <string name="cat_limpiar_busqueda">Limpiar filtros</string>

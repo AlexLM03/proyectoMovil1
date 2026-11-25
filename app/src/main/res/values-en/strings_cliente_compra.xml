@@ -28,6 +28,11 @@
     <string name="det_disponibilidad">Availability</string>
     <string name="det_disponible_hoy">Available today</string>
     <string name="det_agotado">Sold out</string>
+    <string name="det_tanda_titulo">Next batch</string>
+    <string name="det_tanda_hora_etiqueta">Out of the oven at</string>
+    <string name="det_tanda_hora">Ready at %1$s</string>
+    <string name="det_tanda_piezas_etiqueta">Available pieces</string>
+    <string name="det_tanda_piezas">%1$d pieces</string>
     <string name="cat_agotado">Sold out</string>
     <string name="cat_contador_filtrado">%1$d of %2$d items</string>
     <string name="cat_limpiar_busqueda">Clear filters</string>

@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.devnoway.posproyect.data.modelo.Producto
+import com.devnoway.posproyect.data.modelo.TandaHorneado
 import com.devnoway.posproyect.data.remote.Resultado
 import com.devnoway.posproyect.data.repository.CarritoRepository
 import com.devnoway.posproyect.data.repository.CatalogoRepository
@@ -35,6 +36,7 @@ class DetalleProductoViewModel(
 
     data class Estado(
         val producto: Producto? = null,
+        val tanda: TandaHorneado? = null,
         val cargando: Boolean = true,
         val mensaje: String? = null
     )
@@ -46,6 +48,15 @@ class DetalleProductoViewModel(
         viewModelScope.launch {
             catalogoRepository.producto(productoId).collect { producto ->
                 _estado.update { it.copy(producto = producto, cargando = false) }
+            }
+        }
+        // Próxima horneada del producto (la API ya la publica en la ficha).
+        viewModelScope.launch {
+            catalogoRepository.tandas.collect { tandas ->
+                val delProducto = tandas
+                    .filter { it.productoId == productoId }
+                    .maxByOrNull { it.piezasDisponibles }
+                _estado.update { it.copy(tanda = delProducto) }
             }
         }
         viewModelScope.launch {
