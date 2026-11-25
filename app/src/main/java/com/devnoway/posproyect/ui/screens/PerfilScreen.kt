@@ -25,6 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.devnoway.posproyect.R
 import com.devnoway.posproyect.di.ContenedorApp
 import com.devnoway.posproyect.navigation.Rutas
+import com.devnoway.posproyect.data.modelo.enPesos
 import com.devnoway.posproyect.ui.components.BandaMensaje
 import com.devnoway.posproyect.ui.components.BotonSecundario
 import com.devnoway.posproyect.ui.components.FilaDato
@@ -119,6 +120,26 @@ fun PerfilScreen(
                 subtitulo = stringResource(R.string.per_mis_pedidos_sub, estado.pedidos.size),
                 onClick = onMisPedidos
             )
+            if (estado.pedidos.isNotEmpty()) {
+                Text(
+                    text = stringResource(R.string.per_ultimos_pedidos),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(start = 4.dp, top = 4.dp)
+                )
+                estado.pedidos.take(3).forEach { pedido ->
+                    FilaNavegacion(
+                        emoji = "\uD83D\uDCE6",
+                        titulo = pedido.folio,
+                        subtitulo = stringResource(
+                            R.string.per_pedido_resumen,
+                            pedido.fecha,
+                            pedido.total.enPesos()
+                        ),
+                        onClick = onMisPedidos
+                    )
+                }
+            }
             FilaNavegacion(
                 emoji = "\uD83D\uDCCD",
                 titulo = stringResource(R.string.per_direcciones),

@@ -18,6 +18,8 @@
     <string name="per_ajustes">Settings</string>
     <string name="per_mis_pedidos">My orders</string>
     <string name="per_mis_pedidos_sub">%1$d order(s) saved on this phone</string>
+    <string name="per_ultimos_pedidos">Your latest orders</string>
+    <string name="per_pedido_resumen">%1$s · Total %2$s</string>
     <string name="per_direcciones">Delivery addresses</string>
     <string name="per_direcciones_sub">Add or change addresses</string>
     <string name="per_metodos_pago">Payment methods</string>

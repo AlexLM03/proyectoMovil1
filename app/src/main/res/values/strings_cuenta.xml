@@ -19,6 +19,8 @@
     <string name="per_ajustes">Ajustes</string>
     <string name="per_mis_pedidos">Mis pedidos</string>
     <string name="per_mis_pedidos_sub">%1$d pedido(s) guardados en este teléfono</string>
+    <string name="per_ultimos_pedidos">Tus últimos pedidos</string>
+    <string name="per_pedido_resumen">%1$s · Total %2$s</string>
     <string name="per_direcciones">Direcciones de entrega</string>
     <string name="per_direcciones_sub">Agregar o cambiar direcciones</string>
     <string name="per_metodos_pago">Métodos de pago</string>
