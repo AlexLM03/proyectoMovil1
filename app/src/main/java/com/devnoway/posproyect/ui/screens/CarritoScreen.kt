@@ -1,5 +1,6 @@
 package com.devnoway.posproyect.ui.screens
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -198,6 +199,25 @@ fun CarritoScreen(
                 }
 
                 if (estado.aDomicilio) {
+                    if (estado.direcciones.isNotEmpty()) {
+                        Text(
+                            text = stringResource(R.string.car_direcciones_guardadas),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Row(
+                            modifier = Modifier.horizontalScroll(rememberScrollState()),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            estado.direcciones.forEach { guardada ->
+                                ChipCategoria(
+                                    texto = guardada.alias,
+                                    seleccionado = estado.direccion == guardada.calle,
+                                    onClick = { viewModel.cambiarDireccion(guardada.calle) }
+                                )
+                            }
+                        }
+                    }
                     CampoTexto(
                         valor = estado.direccion,
                         onValorCambio = viewModel::cambiarDireccion,
@@ -249,6 +269,17 @@ fun CarritoScreen(
                             valor = estado.total.enPesos()
                         )
                     }
+                }
+
+                if (estado.faltaParaEnvioGratis > 0.0) {
+                    Text(
+                        text = stringResource(
+                            R.string.car_falta_envio_gratis,
+                            estado.faltaParaEnvioGratis.enPesos()
+                        ),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
 
                 Spacer(Modifier.height(4.dp))

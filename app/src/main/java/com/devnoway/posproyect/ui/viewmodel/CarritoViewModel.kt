@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.devnoway.posproyect.data.modelo.Direccion
 import com.devnoway.posproyect.data.modelo.LineaCarrito
 import com.devnoway.posproyect.data.modelo.MetodoPago
 import com.devnoway.posproyect.data.modelo.NuevoPedido
@@ -44,13 +45,23 @@ class CarritoViewModel(
         val metodoPago: MetodoPago = MetodoPago.EFECTIVO,
         val confirmando: Boolean = false,
         val folioCreado: String? = null,
-        val error: String? = null
+        val error: String? = null,
+        /** Direcciones guardadas del cliente, para elegir con un toque. */
+        val direcciones: List<Direccion> = emptyList()
     ) {
         val subtotal: Double get() = lineas.sumOf { it.subtotal }
         val costoEnvio: Double get() = PedidoRepository.costoEnvioPara(subtotal, aDomicilio)
         val total: Double get() = subtotal + costoEnvio
         val piezas: Int get() = lineas.sumOf { it.cantidad }
         val vacio: Boolean get() = lineas.isEmpty()
+
+        /** Cuánto falta para que el envío a domicilio salga gratis. */
+        val faltaParaEnvioGratis: Double
+            get() = if (aDomicilio && costoEnvio > 0.0) {
+                (PedidoRepository.ENVIO_GRATIS_DESDE - subtotal).coerceAtLeast(0.0)
+            } else {
+                0.0
+            }
     }
 
     private val _estado = MutableStateFlow(Estado())
@@ -77,6 +88,13 @@ class CarritoViewModel(
                 _estado.update {
                     it.copy(direccion = predeterminada.calle)
                 }
+            }
+        }
+        // Sus direcciones guardadas quedan a un toque en el carrito.
+        viewModelScope.launch {
+            val usuarioId = usuario?.id ?: return@launch
+            direccionRepository.direcciones(usuarioId).collect { lista ->
+                _estado.update { it.copy(direcciones = lista) }
             }
         }
     }
