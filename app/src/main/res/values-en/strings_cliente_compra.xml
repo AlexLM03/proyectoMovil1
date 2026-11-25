@@ -28,6 +28,9 @@
     <string name="det_disponibilidad">Availability</string>
     <string name="det_disponible_hoy">Available today</string>
     <string name="det_agotado">Sold out</string>
+    <string name="cat_agotado">Sold out</string>
+    <string name="cat_contador_filtrado">%1$d of %2$d items</string>
+    <string name="cat_limpiar_busqueda">Clear filters</string>
     <string name="det_total">Total</string>
     <string name="det_agregar_carrito">Add to cart</string>
     <string name="det_seguir_comprando">Keep shopping</string>
@@ -42,6 +45,8 @@
     <string name="car_domicilio">Home delivery</string>
     <string name="car_recoger">Pick up</string>
     <string name="car_direccion_etiqueta">Delivery address</string>
+    <string name="car_direcciones_guardadas">Use a saved address</string>
+    <string name="car_falta_envio_gratis">You are %1$s away from free delivery.</string>
     <string name="car_pago">Payment</string>
     <string name="car_resumen">Summary</string>
     <string name="car_subtotal">Subtotal</string>

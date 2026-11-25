@@ -29,6 +29,9 @@
     <string name="det_disponibilidad">Disponibilidad</string>
     <string name="det_disponible_hoy">Disponible hoy</string>
     <string name="det_agotado">Agotado</string>
+    <string name="cat_agotado">Agotado</string>
+    <string name="cat_contador_filtrado">%1$d de %2$d artículos</string>
+    <string name="cat_limpiar_busqueda">Limpiar filtros</string>
     <string name="det_total">Total</string>
     <string name="det_agregar_carrito">Agregar al carrito</string>
     <string name="det_seguir_comprando">Seguir comprando</string>
@@ -43,6 +46,8 @@
     <string name="car_domicilio">A domicilio</string>
     <string name="car_recoger">Para recoger</string>
     <string name="car_direccion_etiqueta">Dirección de entrega</string>
+    <string name="car_direcciones_guardadas">Usar una dirección guardada</string>
+    <string name="car_falta_envio_gratis">Te faltan %1$s para el envío gratis.</string>
     <string name="car_pago">Pago</string>
     <string name="car_resumen">Resumen</string>
     <string name="car_subtotal">Subtotal</string>

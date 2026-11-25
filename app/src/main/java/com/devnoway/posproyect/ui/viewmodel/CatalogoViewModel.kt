@@ -84,6 +84,11 @@ class CatalogoViewModel(
         _estado.update { it.copy(categoriaId = id) }
     }
 
+    /** Quita la búsqueda y el filtro de categoría de una sola vez. */
+    fun limpiarFiltros() {
+        _estado.update { it.copy(busqueda = "", categoriaId = null) }
+    }
+
     fun limpiarMensaje() {
         _estado.update { it.copy(mensaje = null) }
     }

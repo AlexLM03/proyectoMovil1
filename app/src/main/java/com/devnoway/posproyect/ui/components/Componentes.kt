@@ -245,12 +245,21 @@ fun TarjetaProducto(
                     overflow = TextOverflow.Ellipsis
                 )
                 Spacer(Modifier.height(4.dp))
-                Text(
-                    text = producto.precio.enPesos(),
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.secondary
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = producto.precio.enPesos(),
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.secondary
+                    )
+                    if (!producto.disponible) {
+                        Spacer(Modifier.width(8.dp))
+                        EtiquetaEstado(
+                            texto = stringResource(R.string.cat_agotado),
+                            color = RojoAlerta
+                        )
+                    }
+                }
             }
             Text(
                 text = "›",

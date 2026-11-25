@@ -38,6 +38,7 @@ import com.devnoway.posproyect.di.ContenedorApp
 import com.devnoway.posproyect.navigation.Rutas
 import com.devnoway.posproyect.ui.adaptativo.LocalClaseVentana
 import com.devnoway.posproyect.ui.components.BandaMensaje
+import com.devnoway.posproyect.ui.components.BotonTexto
 import com.devnoway.posproyect.ui.components.CampoTexto
 import com.devnoway.posproyect.ui.components.ChipCategoria
 import com.devnoway.posproyect.ui.components.IndicadorConexion
@@ -132,10 +133,30 @@ fun CatalogoScreen(
                 TituloSeccion(stringResource(R.string.cat_titulo_catalogo))
                 Spacer(Modifier.weight(1f))
                 Text(
-                    text = stringResource(R.string.cat_articulos, estado.visibles.size),
+                    text = if (estado.busqueda.isBlank() && estado.categoriaId == null) {
+                        stringResource(R.string.cat_articulos, estado.visibles.size)
+                    } else {
+                        stringResource(
+                            R.string.cat_contador_filtrado,
+                            estado.visibles.size,
+                            estado.productos.size
+                        )
+                    },
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+            }
+
+            if (estado.busqueda.isNotBlank() || estado.categoriaId != null) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    BotonTexto(
+                        texto = stringResource(R.string.cat_limpiar_busqueda),
+                        onClick = viewModel::limpiarFiltros
+                    )
+                }
             }
 
             Spacer(Modifier.height(8.dp))
