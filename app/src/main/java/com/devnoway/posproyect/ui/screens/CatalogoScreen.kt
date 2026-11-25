@@ -11,6 +11,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items as itemsCuadricula
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Card
@@ -32,6 +36,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.devnoway.posproyect.R
 import com.devnoway.posproyect.di.ContenedorApp
 import com.devnoway.posproyect.navigation.Rutas
+import com.devnoway.posproyect.ui.adaptativo.LocalClaseVentana
 import com.devnoway.posproyect.ui.components.BandaMensaje
 import com.devnoway.posproyect.ui.components.CampoTexto
 import com.devnoway.posproyect.ui.components.ChipCategoria
@@ -57,6 +62,8 @@ fun CatalogoScreen(
     viewModel: CatalogoViewModel = viewModel(factory = CatalogoViewModel.fabrica(contenedor))
 ) {
     val estado by viewModel.estado.collectAsStateWithLifecycle()
+    // En teléfono se ve una columna; en tableta, dos. Lo decide el ancho real.
+    val columnas = LocalClaseVentana.current.columnasCatalogo
 
     MarcoCliente(
         titulo = "Acambapan",
@@ -132,37 +139,63 @@ fun CatalogoScreen(
             }
 
             Spacer(Modifier.height(8.dp))
-            LazyColumn(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(10.dp),
-                contentPadding = PaddingValues(bottom = 16.dp)
-            ) {
-                items(estado.visibles, key = { it.id }) { producto ->
-                    TarjetaProducto(
-                        producto = producto,
-                        onClick = { onAbrirProducto(producto.id) }
-                    )
-                }
-                if (estado.visibles.isEmpty() && !estado.cargando) {
-                    item {
-                        Text(
-                            text = if (estado.enLinea) {
-                                stringResource(R.string.cat_sin_resultados)
-                            } else {
-                                stringResource(R.string.cat_sin_catalogo)
-                            },
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 32.dp)
+            if (columnas == 1) {
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    contentPadding = PaddingValues(bottom = 16.dp)
+                ) {
+                    items(estado.visibles, key = { it.id }) { producto ->
+                        TarjetaProducto(
+                            producto = producto,
+                            onClick = { onAbrirProducto(producto.id) }
                         )
+                    }
+                    if (estado.visibles.isEmpty() && !estado.cargando) {
+                        item { SinResultados(enLinea = estado.enLinea) }
+                    }
+                }
+            } else {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(columnas),
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(bottom = 16.dp)
+                ) {
+                    itemsCuadricula(estado.visibles, key = { it.id }) { producto ->
+                        TarjetaProducto(
+                            producto = producto,
+                            onClick = { onAbrirProducto(producto.id) }
+                        )
+                    }
+                    if (estado.visibles.isEmpty() && !estado.cargando) {
+                        item(span = { GridItemSpan(maxLineSpan) }) {
+                            SinResultados(enLinea = estado.enLinea)
+                        }
                     }
                 }
             }
         }
     }
+}
+
+/** Estado vacío del catálogo, compartido por la lista y la cuadrícula. */
+@Composable
+private fun SinResultados(enLinea: Boolean) {
+    Text(
+        text = if (enLinea) {
+            stringResource(R.string.cat_sin_resultados)
+        } else {
+            stringResource(R.string.cat_sin_catalogo)
+        },
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 32.dp)
+    )
 }
 
 @Composable
