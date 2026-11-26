@@ -120,7 +120,9 @@ fun LoginScreen(
                     stringResource(R.string.log_boton_iniciar_sesion)
                 },
                 onClick = { viewModel.entrar() },
-                habilitado = !estado.cargando
+                habilitado = !estado.cargando &&
+                    estado.correo.isNotBlank() &&
+                    estado.contrasena.isNotBlank()
             )
             Spacer(Modifier.height(10.dp))
             BotonSecundario(

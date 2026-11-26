@@ -34,6 +34,8 @@
     <string name="accion_eliminar">Delete</string>
     <string name="accion_reintentar">Retry</string>
     <string name="accion_cerrar">Close</string>
+    <string name="com_mostrar">Show</string>
+    <string name="com_ocultar">Hide</string>
 
     <!-- Order states (used by the customer and admin flows) -->
     <string name="estado_recibido">Received</string>

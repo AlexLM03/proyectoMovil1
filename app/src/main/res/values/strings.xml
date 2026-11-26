@@ -35,6 +35,8 @@
     <string name="accion_eliminar">Eliminar</string>
     <string name="accion_reintentar">Reintentar</string>
     <string name="accion_cerrar">Cerrar</string>
+    <string name="com_mostrar">Mostrar</string>
+    <string name="com_ocultar">Ocultar</string>
 
     <!-- Estados del pedido (los usa todo el flujo del cliente y del admin) -->
     <string name="estado_recibido">Recibido</string>

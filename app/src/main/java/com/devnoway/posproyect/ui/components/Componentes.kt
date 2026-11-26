@@ -42,6 +42,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -177,16 +181,31 @@ fun CampoTexto(
     tipoTeclado: KeyboardType = KeyboardType.Text,
     lineas: Int = 1
 ) {
+    // En los campos de contraseña se puede mostrar el texto para revisarlo.
+    var contrasenaVisible by remember { mutableStateOf(false) }
     OutlinedTextField(
         value = valor,
         onValueChange = onValorCambio,
         label = { Text(etiqueta) },
         singleLine = lineas == 1,
         maxLines = lineas,
-        visualTransformation = if (esContrasena) {
+        visualTransformation = if (esContrasena && !contrasenaVisible) {
             PasswordVisualTransformation()
         } else {
             VisualTransformation.None
+        },
+        trailingIcon = if (esContrasena) {
+            {
+                TextButton(onClick = { contrasenaVisible = !contrasenaVisible }) {
+                    Text(
+                        text = stringResource(
+                            if (contrasenaVisible) R.string.com_ocultar else R.string.com_mostrar
+                        )
+                    )
+                }
+            }
+        } else {
+            null
         },
         keyboardOptions = KeyboardOptions(keyboardType = tipoTeclado),
         modifier = modifier.fillMaxWidth()
