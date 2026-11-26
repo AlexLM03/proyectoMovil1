@@ -1,0 +1,29 @@
+==============================================================================
+PRUEBAS DE INTEGRACIÓN · API Acambapan · 2026-11-25 23:11
+==============================================================================
+[PASA] GET /ping responde 200  ->  HTTP 200
+[PASA] MySQL responde ok  ->  ok
+[PASA] GET /categorias  ->  4 categorías
+[PASA] GET /productos trae el catálogo  ->  12 productos
+[PASA] Ficha de producto con multimedia y tandas  ->  multimedia=1 tandas=1
+[PASA] Producto inexistente devuelve 404  ->  HTTP 404
+[PASA] Login ADMIN entrega token  ->  HTTP 200
+[PASA] Login con contraseña incorrecta devuelve 401  ->  HTTP 401
+[PASA] Login CLIENTE entrega token  ->  HTTP 200
+[PASA] GET /resumen sin token devuelve 401  ->  HTTP 401
+[PASA] PUT /insumos sin token devuelve 401  ->  HTTP 401
+[PASA] GET /resumen con token CLIENTE devuelve 403  ->  HTTP 403
+[PASA] GET /resumen con token ADMIN  ->  pedidosHoy=1 ventasHoy=66
+[PASA] GET /insumos es público  ->  8 insumos
+[PASA] POST /pedidos crea el pedido  ->  HTTP 201, folio=PRUEBA-231126, total=66
+[PASA] El servidor calcula subtotal y total  ->  total=66 esperado=66.0
+[PASA] Reenviar el mismo folio no duplica (idempotencia)  ->  HTTP 200
+[PASA] El folio aparece una sola vez en la lista  ->  1 coincidencias
+[PASA] Cambio de estado válido RECIBIDO -> EN_PREPARACION  ->  HTTP 200
+[PASA] Salto inválido devuelve 409  ->  HTTP 409
+[PASA] GET /direcciones con token  ->  2 direcciones
+[PASA] GET /notificaciones del cliente  ->  6 avisos
+[PASA] Registro con correo existente devuelve 409  ->  HTTP 409
+------------------------------------------------------------------------------
+RESULTADO: 23/23 comprobaciones en verde
+------------------------------------------------------------------------------
