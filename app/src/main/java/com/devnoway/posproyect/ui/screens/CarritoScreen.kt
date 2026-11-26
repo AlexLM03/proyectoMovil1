@@ -31,6 +31,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.devnoway.posproyect.R
 import com.devnoway.posproyect.data.modelo.MetodoPago
 import com.devnoway.posproyect.data.modelo.enPesos
+import com.devnoway.posproyect.ui.adaptativo.DosColumnas
 import com.devnoway.posproyect.di.ContenedorApp
 import com.devnoway.posproyect.navigation.Rutas
 import com.devnoway.posproyect.ui.components.BandaMensaje
@@ -77,13 +78,12 @@ fun CarritoScreen(
         onNavegar = onNavegar,
         modifier = modifier
     ) {
-        Column(
+        DosColumnas(
             modifier = Modifier
                 .weight(1f)
-                .verticalScroll(rememberScrollState())
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
+            pesoIzquierda = 1.15f,
+            izquierda = {
             TituloSeccion(
                 stringResource(
                     R.string.car_pedido_resumen,
@@ -182,6 +182,8 @@ fun CarritoScreen(
                 )
             }
 
+            },
+            derecha = {
             if (!estado.vacio) {
                 Spacer(Modifier.height(4.dp))
                 TituloSeccion(stringResource(R.string.car_entrega))
@@ -297,6 +299,7 @@ fun CarritoScreen(
                     onClick = onSeguirComprando
                 )
             }
-        }
+            }
+        )
     }
 }

@@ -113,9 +113,6 @@ fun CatalogoScreen(
                 }
             }
 
-            Spacer(Modifier.height(12.dp))
-            PromocionEnvio()
-
             estado.mensaje?.let { mensaje ->
                 Spacer(Modifier.height(10.dp))
                 BandaMensaje(
@@ -125,40 +122,6 @@ fun CatalogoScreen(
                 )
             }
 
-            Spacer(Modifier.height(16.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TituloSeccion(stringResource(R.string.cat_titulo_catalogo))
-                Spacer(Modifier.weight(1f))
-                Text(
-                    text = if (estado.busqueda.isBlank() && estado.categoriaId == null) {
-                        stringResource(R.string.cat_articulos, estado.visibles.size)
-                    } else {
-                        stringResource(
-                            R.string.cat_contador_filtrado,
-                            estado.visibles.size,
-                            estado.productos.size
-                        )
-                    },
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            if (estado.busqueda.isNotBlank() || estado.categoriaId != null) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    BotonTexto(
-                        texto = stringResource(R.string.cat_limpiar_busqueda),
-                        onClick = viewModel::limpiarFiltros
-                    )
-                }
-            }
-
             Spacer(Modifier.height(8.dp))
             if (columnas == 1) {
                 LazyColumn(
@@ -166,6 +129,15 @@ fun CatalogoScreen(
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                     contentPadding = PaddingValues(bottom = 16.dp)
                 ) {
+                    item {
+                        CabeceraCatalogo(
+                            visibles = estado.visibles.size,
+                            total = estado.productos.size,
+                            filtrando = estado.busqueda.isNotBlank() ||
+                                estado.categoriaId != null,
+                            onLimpiar = viewModel::limpiarFiltros
+                        )
+                    }
                     items(estado.visibles, key = { it.id }) { producto ->
                         TarjetaProducto(
                             producto = producto,
@@ -184,6 +156,15 @@ fun CatalogoScreen(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     contentPadding = PaddingValues(bottom = 16.dp)
                 ) {
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        CabeceraCatalogo(
+                            visibles = estado.visibles.size,
+                            total = estado.productos.size,
+                            filtrando = estado.busqueda.isNotBlank() ||
+                                estado.categoriaId != null,
+                            onLimpiar = viewModel::limpiarFiltros
+                        )
+                    }
                     itemsCuadricula(estado.visibles, key = { it.id }) { producto ->
                         TarjetaProducto(
                             producto = producto,
@@ -199,6 +180,52 @@ fun CatalogoScreen(
             }
         }
     }
+}
+
+/**
+ * Cabecera del catálogo que se desplaza con los productos.
+ *
+ * Antes la promoción y el título quedaban fijos y robaban alto a la lista,
+ * sobre todo en horizontal. Ahora viajan dentro del listado y dejan libre la
+ * pantalla para los productos.
+ */
+@Composable
+private fun CabeceraCatalogo(
+    visibles: Int,
+    total: Int,
+    filtrando: Boolean,
+    onLimpiar: () -> Unit
+) {
+    PromocionEnvio()
+    Spacer(Modifier.height(12.dp))
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        TituloSeccion(stringResource(R.string.cat_titulo_catalogo))
+        Spacer(Modifier.weight(1f))
+        Text(
+            text = if (filtrando) {
+                stringResource(R.string.cat_contador_filtrado, visibles, total)
+            } else {
+                stringResource(R.string.cat_articulos, visibles)
+            },
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+    if (filtrando) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
+            BotonTexto(
+                texto = stringResource(R.string.cat_limpiar_busqueda),
+                onClick = onLimpiar
+            )
+        }
+    }
+    Spacer(Modifier.height(4.dp))
 }
 
 /** Estado vacío del catálogo, compartido por la lista y la cuadrícula. */

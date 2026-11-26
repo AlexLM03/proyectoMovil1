@@ -27,6 +27,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.devnoway.posproyect.R
 import com.devnoway.posproyect.di.ContenedorApp
 import com.devnoway.posproyect.ui.components.BandaMensaje
+import com.devnoway.posproyect.ui.adaptativo.DosColumnas
 import com.devnoway.posproyect.ui.components.BarraSuperior
 import com.devnoway.posproyect.ui.components.BotonPrincipal
 import com.devnoway.posproyect.ui.components.BotonTexto
@@ -65,16 +66,17 @@ fun RegistroScreen(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = { BarraSuperior(titulo = stringResource(R.string.reg_titulo), onAtras = onVolverLogin) }
     ) { padding ->
-        Column(
+        DosColumnas(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 24.dp, vertical = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            MarcaAcambapan(tamanoLogo = 90.dp, mostrarEslogan = false)
+            separacion = 32,
+            izquierda = {
+                Spacer(Modifier.height(12.dp))
+                MarcaAcambapan(tamanoLogo = 90.dp, mostrarEslogan = false)
+            },
+            derecha = {
             Spacer(Modifier.height(4.dp))
 
             CampoTexto(
@@ -144,6 +146,7 @@ fun RegistroScreen(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Spacer(Modifier.height(16.dp))
-        }
+            }
+        )
     }
 }

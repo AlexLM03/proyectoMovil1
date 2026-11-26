@@ -26,6 +26,7 @@ import com.devnoway.posproyect.R
 import com.devnoway.posproyect.di.ContenedorApp
 import com.devnoway.posproyect.navigation.Rutas
 import com.devnoway.posproyect.data.modelo.enPesos
+import com.devnoway.posproyect.ui.adaptativo.DosColumnas
 import com.devnoway.posproyect.ui.components.BandaMensaje
 import com.devnoway.posproyect.ui.components.BotonSecundario
 import com.devnoway.posproyect.ui.components.FilaDato
@@ -64,13 +65,11 @@ fun PerfilScreen(
         onNavegar = onNavegar,
         modifier = modifier
     ) {
-        Column(
+        DosColumnas(
             modifier = Modifier
                 .weight(1f)
-                .verticalScroll(rememberScrollState())
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
+            izquierda = {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -112,6 +111,8 @@ fun PerfilScreen(
                 )
             }
 
+            },
+            derecha = {
             Spacer(Modifier.height(4.dp))
             TituloSeccion(stringResource(R.string.per_ajustes))
             FilaNavegacion(
@@ -204,6 +205,7 @@ fun PerfilScreen(
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
-        }
+            }
+        )
     }
 }

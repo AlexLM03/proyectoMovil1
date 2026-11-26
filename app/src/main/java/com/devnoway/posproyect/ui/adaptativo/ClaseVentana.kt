@@ -37,8 +37,13 @@ enum class ClaseVentana {
             EXPANDIDA -> 1080.dp
         }
 
-    /** Columnas del catálogo: una en teléfono vertical, dos cuando hay espacio. */
-    val columnasCatalogo: Int get() = if (this == COMPACTA) 1 else 2
+    /** Columnas del catálogo: una en teléfono, dos en tableta y tres en ventana grande. */
+    val columnasCatalogo: Int
+        get() = when (this) {
+            COMPACTA -> 1
+            MEDIANA -> 2
+            EXPANDIDA -> 3
+        }
 }
 
 /** Puntos de corte de Material 3, en dp. */

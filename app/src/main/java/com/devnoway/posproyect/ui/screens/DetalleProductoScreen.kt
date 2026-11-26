@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -32,6 +33,7 @@ import com.devnoway.posproyect.R
 import com.devnoway.posproyect.data.modelo.enPesos
 import com.devnoway.posproyect.di.ContenedorApp
 import com.devnoway.posproyect.navigation.Rutas
+import com.devnoway.posproyect.ui.adaptativo.DosColumnas
 import com.devnoway.posproyect.ui.components.BotonPrincipal
 import com.devnoway.posproyect.ui.components.BotonSecundario
 import com.devnoway.posproyect.ui.components.EtiquetaEstado
@@ -70,17 +72,15 @@ fun DetalleProductoScreen(
         onAtras = onAtras,
         modifier = modifier
     ) {
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            if (producto == null) {
-                Spacer(Modifier.height(48.dp))
+        if (producto == null) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxSize()
+                    .padding(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
                 Text(
                     text = if (estado.cargando) {
                         stringResource(R.string.det_cargando)
@@ -96,125 +96,153 @@ fun DetalleProductoScreen(
                     texto = stringResource(R.string.det_volver_catalogo),
                     onClick = onAtras
                 )
-                return@Column
             }
-
-            RecuadroEmoji(emoji = producto.emoji, tamano = 140.dp)
-
-            Text(
-                text = producto.nombre,
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
-            if (producto.categoria.isNotBlank()) {
-                EtiquetaEstado(
-                    texto = producto.categoria,
-                    color = MaterialTheme.colorScheme.secondary
-                )
-            }
-
-            Text(
-                text = producto.precio.enPesos(),
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
-            )
-            Text(
-                text = producto.descripcion,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center
-            )
-
-            // Horneada del día: el dato ya venía de la API pero no se mostraba.
-            estado.tanda?.let { tanda ->
-                Card(
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer
-                    ),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-                ) {
-                    Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)) {
-                        Text(
-                            text = stringResource(R.string.det_tanda_titulo),
-                            style = MaterialTheme.typography.labelLarge,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(bottom = 4.dp)
-                        )
-                        FilaDato(
-                            etiqueta = stringResource(R.string.det_tanda_hora_etiqueta),
-                            valor = stringResource(
-                                R.string.det_tanda_hora,
-                                tanda.horaSalida.take(5)
-                            )
-                        )
-                        FilaDato(
-                            etiqueta = stringResource(R.string.det_tanda_piezas_etiqueta),
-                            valor = stringResource(
-                                R.string.det_tanda_piezas,
-                                tanda.piezasDisponibles
-                            )
-                        )
+        } else {
+            // En horizontal, ficha a la izquierda y compra a la derecha.
+            DosColumnas(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(20.dp),
+                pesoIzquierda = 1.1f,
+                izquierda = {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        RecuadroEmoji(emoji = producto.emoji, tamano = 140.dp)
                     }
-                }
-            }
 
-            Spacer(Modifier.height(8.dp))
-            Text(
-                text = stringResource(R.string.det_cantidad),
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = { if (cantidad > 1) cantidad-- }) {
-                    Text(text = "−", fontSize = 26.sp)
-                }
-                Text(
-                    text = cantidad.toString(),
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(horizontal = 20.dp)
-                )
-                IconButton(onClick = { cantidad++ }) {
-                    Text(text = "+", fontSize = 22.sp)
-                }
-            }
-
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-            ) {
-                Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                    FilaDato(
-                        etiqueta = stringResource(R.string.det_disponibilidad),
-                        valor = if (producto.disponible) {
-                            stringResource(R.string.det_disponible_hoy)
-                        } else {
-                            stringResource(R.string.det_agotado)
+                    Text(
+                        text = producto.nombre,
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    if (producto.categoria.isNotBlank()) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            EtiquetaEstado(
+                                texto = producto.categoria,
+                                color = MaterialTheme.colorScheme.secondary
+                            )
                         }
+                    }
+
+                    Text(
+                        text = producto.precio.enPesos(),
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
-                    FilaDato(
-                        etiqueta = stringResource(R.string.det_total),
-                        valor = (producto.precio * cantidad).enPesos()
+                    Text(
+                        text = producto.descripcion,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    // Horneada del día: el dato ya viene de la API.
+                    estado.tanda?.let { tanda ->
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.secondaryContainer
+                            ),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.det_tanda_titulo),
+                                    style = MaterialTheme.typography.labelLarge,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(bottom = 4.dp)
+                                )
+                                FilaDato(
+                                    etiqueta = stringResource(R.string.det_tanda_hora_etiqueta),
+                                    valor = stringResource(
+                                        R.string.det_tanda_hora,
+                                        tanda.horaSalida.take(5)
+                                    )
+                                )
+                                FilaDato(
+                                    etiqueta = stringResource(R.string.det_tanda_piezas_etiqueta),
+                                    valor = stringResource(
+                                        R.string.det_tanda_piezas,
+                                        tanda.piezasDisponibles
+                                    )
+                                )
+                            }
+                        }
+                    }
+                },
+                derecha = {
+                    Text(
+                        text = stringResource(R.string.det_cantidad),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        IconButton(onClick = { if (cantidad > 1) cantidad-- }) {
+                            Text(text = "−", fontSize = 26.sp)
+                        }
+                        Text(
+                            text = cantidad.toString(),
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(horizontal = 20.dp)
+                        )
+                        IconButton(onClick = { cantidad++ }) {
+                            Text(text = "+", fontSize = 22.sp)
+                        }
+                    }
+
+                    Card(
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant
+                        ),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                        ) {
+                            FilaDato(
+                                etiqueta = stringResource(R.string.det_disponibilidad),
+                                valor = if (producto.disponible) {
+                                    stringResource(R.string.det_disponible_hoy)
+                                } else {
+                                    stringResource(R.string.det_agotado)
+                                }
+                            )
+                            FilaDato(
+                                etiqueta = stringResource(R.string.det_total),
+                                valor = (producto.precio * cantidad).enPesos()
+                            )
+                        }
+                    }
+
+                    Spacer(Modifier.height(4.dp))
+                    BotonPrincipal(
+                        texto = stringResource(R.string.det_agregar_carrito),
+                        onClick = {
+                            viewModel.agregarAlCarrito(cantidad)
+                            onAgregarAlCarrito()
+                        },
+                        habilitado = producto.disponible
+                    )
+                    BotonSecundario(
+                        texto = stringResource(R.string.det_seguir_comprando),
+                        onClick = onAtras
                     )
                 }
-            }
-
-            Spacer(Modifier.height(4.dp))
-            BotonPrincipal(
-                texto = stringResource(R.string.det_agregar_carrito),
-                onClick = {
-                    viewModel.agregarAlCarrito(cantidad)
-                    onAgregarAlCarrito()
-                },
-                habilitado = producto.disponible
-            )
-            BotonSecundario(
-                texto = stringResource(R.string.det_seguir_comprando),
-                onClick = onAtras
             )
         }
     }

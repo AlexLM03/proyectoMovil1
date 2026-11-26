@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -26,6 +27,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.devnoway.posproyect.R
 import com.devnoway.posproyect.data.modelo.Usuario
 import com.devnoway.posproyect.di.ContenedorApp
+import com.devnoway.posproyect.ui.adaptativo.DosColumnas
 import com.devnoway.posproyect.ui.components.BandaMensaje
 import com.devnoway.posproyect.ui.components.BotonPrincipal
 import com.devnoway.posproyect.ui.components.BotonSecundario
@@ -76,90 +78,92 @@ fun LoginScreen(
         modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        Column(
+        DosColumnas(
             modifier = Modifier
                 .fillMaxSize()
                 .safeDrawingPadding()
-                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 24.dp, vertical = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Spacer(Modifier.height(24.dp))
-            MarcaAcambapan(tamanoLogo = 130.dp)
-            Spacer(Modifier.height(28.dp))
-
-            CampoTexto(
-                valor = estado.correo,
-                onValorCambio = viewModel::cambiarCorreo,
-                etiqueta = stringResource(R.string.log_etiqueta_correo),
-                tipoTeclado = KeyboardType.Email
-            )
-            Spacer(Modifier.height(12.dp))
-            CampoTexto(
-                valor = estado.contrasena,
-                onValorCambio = viewModel::cambiarContrasena,
-                etiqueta = stringResource(R.string.log_etiqueta_contrasena),
-                esContrasena = true
-            )
-
-            estado.error?.let { mensaje ->
-                Spacer(Modifier.height(12.dp))
-                BandaMensaje(
-                    mensaje = mensaje,
-                    esError = true,
-                    onCerrar = viewModel::limpiarError
+            separacion = 32,
+            izquierda = {
+                Spacer(Modifier.height(24.dp))
+                MarcaAcambapan(tamanoLogo = 130.dp)
+                Spacer(Modifier.height(8.dp))
+            },
+            derecha = {
+                CampoTexto(
+                    valor = estado.correo,
+                    onValorCambio = viewModel::cambiarCorreo,
+                    etiqueta = stringResource(R.string.log_etiqueta_correo),
+                    tipoTeclado = KeyboardType.Email
                 )
+                Spacer(Modifier.height(12.dp))
+                CampoTexto(
+                    valor = estado.contrasena,
+                    onValorCambio = viewModel::cambiarContrasena,
+                    etiqueta = stringResource(R.string.log_etiqueta_contrasena),
+                    esContrasena = true
+                )
+
+                estado.error?.let { mensaje ->
+                    Spacer(Modifier.height(12.dp))
+                    BandaMensaje(
+                        mensaje = mensaje,
+                        esError = true,
+                        onCerrar = viewModel::limpiarError
+                    )
+                }
+
+                Spacer(Modifier.height(20.dp))
+                BotonPrincipal(
+                    texto = if (estado.cargando) {
+                        stringResource(R.string.log_boton_entrando)
+                    } else {
+                        stringResource(R.string.log_boton_iniciar_sesion)
+                    },
+                    onClick = { viewModel.entrar() },
+                    habilitado = !estado.cargando &&
+                        estado.correo.isNotBlank() &&
+                        estado.contrasena.isNotBlank()
+                )
+                Spacer(Modifier.height(10.dp))
+                BotonSecundario(
+                    texto = stringResource(R.string.log_boton_crear_cuenta),
+                    onClick = onCrearCuenta
+                )
+                Spacer(Modifier.height(4.dp))
+                BotonTexto(
+                    texto = stringResource(R.string.log_boton_invitado),
+                    onClick = onInvitado
+                )
+
+                Spacer(Modifier.height(28.dp))
+                Text(
+                    text = stringResource(R.string.log_panel_titulo),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                BotonTexto(
+                    texto = stringResource(R.string.log_boton_admin),
+                    onClick = { viewModel.entrar(rolRequerido = "ADMIN") }
+                )
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = stringResource(
+                        R.string.log_demo_credenciales,
+                        "admin@pantradicion.com",
+                        "123456",
+                        "s23120227@alumnos.itsur.edu.mx",
+                        "123456"
+                    ),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(Modifier.height(16.dp))
             }
-
-            Spacer(Modifier.height(20.dp))
-            BotonPrincipal(
-                texto = if (estado.cargando) {
-                    stringResource(R.string.log_boton_entrando)
-                } else {
-                    stringResource(R.string.log_boton_iniciar_sesion)
-                },
-                onClick = { viewModel.entrar() },
-                habilitado = !estado.cargando &&
-                    estado.correo.isNotBlank() &&
-                    estado.contrasena.isNotBlank()
-            )
-            Spacer(Modifier.height(10.dp))
-            BotonSecundario(
-                texto = stringResource(R.string.log_boton_crear_cuenta),
-                onClick = onCrearCuenta
-            )
-            Spacer(Modifier.height(4.dp))
-            BotonTexto(
-                texto = stringResource(R.string.log_boton_invitado),
-                onClick = onInvitado
-            )
-
-            Spacer(Modifier.height(28.dp))
-            Text(
-                text = stringResource(R.string.log_panel_titulo),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center
-            )
-            BotonTexto(
-                texto = stringResource(R.string.log_boton_admin),
-                onClick = { viewModel.entrar(rolRequerido = "ADMIN") }
-            )
-            Spacer(Modifier.height(8.dp))
-            Text(
-                text = stringResource(
-                    R.string.log_demo_credenciales,
-                    "admin@pantradicion.com",
-                    "123456",
-                    "s23120227@alumnos.itsur.edu.mx",
-                    "123456"
-                ),
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center
-            )
-            Spacer(Modifier.height(16.dp))
-        }
+        )
     }
 }
