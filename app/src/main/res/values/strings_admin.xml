@@ -47,6 +47,7 @@
     <string name="gpe_titulo">Gestión de pedidos</string>
     <string name="gpe_filtro_todos">Todos</string>
     <string name="gpe_conteo">%1$d pedidos</string>
+    <string name="gpe_buscar_etiqueta">Buscar por folio o cliente</string>
     <string name="gpe_sin_pedidos">No hay pedidos con este filtro.</string>
     <string name="gpe_pendiente_envio">Pendiente de envío (creado sin conexión)</string>
     <string name="gpe_ver_seguimiento">Ver seguimiento</string>

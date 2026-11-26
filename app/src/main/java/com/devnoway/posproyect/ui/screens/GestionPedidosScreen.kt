@@ -36,6 +36,7 @@ import com.devnoway.posproyect.di.ContenedorApp
 import com.devnoway.posproyect.navigation.Rutas
 import com.devnoway.posproyect.ui.components.BandaMensaje
 import com.devnoway.posproyect.ui.components.BotonTexto
+import com.devnoway.posproyect.ui.components.CampoTexto
 import com.devnoway.posproyect.ui.components.ChipCategoria
 import com.devnoway.posproyect.ui.components.EtiquetaEstado
 import com.devnoway.posproyect.ui.components.IndicadorConexion
@@ -103,6 +104,12 @@ fun GestionPedidosScreen(
                 .padding(horizontal = 16.dp)
         ) {
             Spacer(Modifier.height(12.dp))
+            CampoTexto(
+                valor = estado.busqueda,
+                onValorCambio = viewModel::buscar,
+                etiqueta = stringResource(R.string.gpe_buscar_etiqueta)
+            )
+            Spacer(Modifier.height(8.dp))
             Row(
                 modifier = Modifier.horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)

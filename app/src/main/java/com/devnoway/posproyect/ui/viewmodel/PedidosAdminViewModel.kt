@@ -32,12 +32,23 @@ class PedidosAdminViewModel(
     data class Estado(
         val pedidos: List<Pedido> = emptyList(),
         val filtro: EstadoPedido? = null,
+        val busqueda: String = "",
         val enLinea: Boolean = true,
         val trabajando: Boolean = false,
         val mensaje: String? = null
     ) {
+        /** Pedidos que pasan el filtro de estado y la búsqueda por folio o cliente. */
         val visibles: List<Pedido>
-            get() = filtro?.let { estado -> pedidos.filter { it.estado == estado } } ?: pedidos
+            get() {
+                val texto = busqueda.trim()
+                return pedidos
+                    .filter { filtro == null || it.estado == filtro }
+                    .filter {
+                        texto.isEmpty() ||
+                            it.folio.contains(texto, ignoreCase = true) ||
+                            it.cliente.contains(texto, ignoreCase = true)
+                    }
+            }
     }
 
     private val _estado = MutableStateFlow(Estado())
@@ -59,6 +70,11 @@ class PedidosAdminViewModel(
 
     fun filtrar(estado: EstadoPedido?) {
         _estado.update { it.copy(filtro = estado) }
+    }
+
+    /** Busca por folio o por nombre del cliente. */
+    fun buscar(texto: String) {
+        _estado.update { it.copy(busqueda = texto) }
     }
 
     fun sincronizar() {

@@ -47,6 +47,7 @@
     <string name="gpe_titulo">Order management</string>
     <string name="gpe_filtro_todos">All</string>
     <string name="gpe_conteo">%1$d orders</string>
+    <string name="gpe_buscar_etiqueta">Search by order number or customer</string>
     <string name="gpe_sin_pedidos">No orders match this filter.</string>
     <string name="gpe_pendiente_envio">Waiting to be sent (created offline)</string>
     <string name="gpe_ver_seguimiento">View tracking</string>
